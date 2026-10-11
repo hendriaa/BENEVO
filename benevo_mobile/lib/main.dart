@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'core/constants/colors.dart';
-import 'features/auth/screens/register_screen.dart';
+import 'features/auth/screens/login_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,15 +16,15 @@ class BenevoApp extends StatelessWidget {
       title: 'Benevo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        useMaterial3: true,
+        useMaterial3: false,
+        splashFactory: InkRipple.splashFactory,
         scaffoldBackgroundColor: AppColors.background,
         colorScheme: ColorScheme.fromSeed(
           seedColor: AppColors.primary,
           primary: AppColors.primary,
         ),
-        fontFamily: GoogleFonts.plusJakartaSans().fontFamily,
       ),
-      home: const RegisterScreen(),
+      home: const LoginScreen(),
     );
   }
 }

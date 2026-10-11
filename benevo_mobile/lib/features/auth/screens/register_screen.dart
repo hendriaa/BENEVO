@@ -4,6 +4,7 @@ import '../../../core/constants/colors.dart';
 import '../widgets/benevo_logo.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/phone_input_field.dart';
+import 'login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -426,34 +427,42 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                         // Footer Link: Sudah punya akun benevo? Masuk Sekarang
                         Center(
-                          child: Text.rich(
-                            TextSpan(
-                              text: 'Sudah punya akun benevo? ',
-                              style: const TextStyle(
-                                fontSize: 12.5,
-                                color: AppColors.textSecondary,
+                          child: Wrap(
+                            alignment: WrapAlignment.center,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            children: [
+                              const Text(
+                                'Sudah punya akun benevo? ',
+                                style: TextStyle(
+                                  fontSize: 12.5,
+                                  color: AppColors.textSecondary,
+                                ),
                               ),
-                              children: [
-                                TextSpan(
-                                  text: 'Masuk Sekarang',
-                                  style: const TextStyle(
+                              GestureDetector(
+                                key: const ValueKey('login_link'),
+                                onTap: () {
+                                  if (Navigator.canPop(context)) {
+                                    Navigator.pop(context);
+                                  } else {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const LoginScreen(),
+                                      ),
+                                    );
+                                  }
+                                },
+                                child: const Text(
+                                  'Masuk Sekarang',
+                                  style: TextStyle(
                                     color: AppColors.primary,
                                     fontWeight: FontWeight.w700,
                                     decoration: TextDecoration.underline,
                                   ),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                          content: Text(
-                                              'Menavigasi ke halaman Masuk/Login'),
-                                        ),
-                                      );
-                                    },
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
