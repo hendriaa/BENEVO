@@ -4,6 +4,7 @@ import '../widgets/benevo_logo.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/google_logo.dart';
 import '../widgets/incognito_icon.dart';
+import '../../home/screens/dashboard_screen.dart';
 import 'forgot_password_screen.dart';
 import 'register_screen.dart';
 
@@ -51,6 +52,12 @@ class _LoginScreenState extends State<LoginScreen> {
             backgroundColor: AppColors.primary,
           ),
         );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const DashboardScreen(userName: 'Hanzel'),
+          ),
+        );
       }
     });
   }
@@ -60,6 +67,12 @@ class _LoginScreenState extends State<LoginScreen> {
       const SnackBar(
         content: Text('Melanjutkan sebagai pengguna anonim...'),
         backgroundColor: Color(0xFF8F7EBA),
+      ),
+    );
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const DashboardScreen(isAnonymous: true),
       ),
     );
   }
