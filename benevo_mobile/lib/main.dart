@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'core/constants/colors.dart';
-import 'features/auth/screens/login_screen.dart';
+import 'features/auth/screens/register_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,7 +24,7 @@ class BenevoApp extends StatelessWidget {
           primary: AppColors.primary,
         ),
       ),
-      home: const LoginScreen(),
+      home: const RegisterScreen(),
     );
   }
 }

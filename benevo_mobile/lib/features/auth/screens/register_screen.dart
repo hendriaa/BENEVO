@@ -68,6 +68,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
             backgroundColor: AppColors.primary,
           ),
         );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const LoginScreen(),
+          ),
+        );
       }
     });
   }
