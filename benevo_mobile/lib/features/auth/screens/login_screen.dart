@@ -4,6 +4,7 @@ import '../widgets/benevo_logo.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/google_logo.dart';
 import '../widgets/incognito_icon.dart';
+import 'forgot_password_screen.dart';
 import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -64,9 +65,10 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _handleForgotPassword() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Menavigasi ke halaman Lupa Kata Sandi'),
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const ForgotPasswordScreen(),
       ),
     );
   }
