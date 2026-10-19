@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import '../../../core/constants/colors.dart';
 import '../widgets/campaign_card.dart';
 import '../widgets/category_item.dart';
+import '../widgets/benevo_bottom_nav_bar.dart';
+import '../../donation/screens/campaign_detail_screen.dart';
+import '../../donation/models/campaign_model.dart';
 
 class DashboardScreen extends StatefulWidget {
   final String userName;
@@ -50,41 +53,62 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: Stack(
+      body: IndexedStack(
+        index: _currentNavIndex,
         children: [
-          // Background Gradient (purple top fading to background)
-          Container(
-            height: 340,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Color(0xFF9A7EC4),
-                  Color(0xFFB19ACF),
-                  Color(0xFFDED2EE),
-                  AppColors.background,
-                ],
-                stops: [0.0, 0.35, 0.75, 1.0],
-              ),
+          _buildHomeTab(displayName),
+          const CampaignDetailScreen(isEmbeddedInDashboard: true),
+          _buildHistoryTab(),
+          _buildProfileTab(displayName),
+        ],
+      ),
+      bottomNavigationBar: BenevoBottomNavBar(
+        currentIndex: _currentNavIndex,
+        onTap: (index) {
+          setState(() {
+            _currentNavIndex = index;
+          });
+        },
+      ),
+    );
+  }
+
+  Widget _buildHomeTab(String displayName) {
+    return Stack(
+      children: [
+        // Background Gradient (purple top fading to background)
+        Container(
+          height: 340,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFF9A7EC4),
+                Color(0xFFB19ACF),
+                Color(0xFFDED2EE),
+                AppColors.background,
+              ],
+              stops: [0.0, 0.35, 0.75, 1.0],
             ),
           ),
+        ),
 
-          SafeArea(
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 10),
+        SafeArea(
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 10),
 
-                  // Top Header: Profile Avatar & Search Bar
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Row(
-                      children: [
-                        // Profile Avatar
-                        GestureDetector(
+                // Top Header: Profile Avatar & Search Bar
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Row(
+                    children: [
+                      // Profile Avatar
+                      GestureDetector(
                           onTap: () => _showNotification('Membuka profil $displayName'),
                           child: Container(
                             width: 44,
@@ -397,10 +421,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   // Featured Campaign Card
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(22),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => const CampaignDetailScreen(),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(22),
                         boxShadow: [
                           BoxShadow(
                             color: AppColors.primary.withValues(alpha: 0.10),
@@ -550,9 +582,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       child: SizedBox(
                                         height: 46,
                                         child: ElevatedButton(
-                                          onPressed: () => _showNotification(
-                                            'Membuka form donasi Bencana NTT',
-                                          ),
+                                          onPressed: () {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (_) =>
+                                                    const CampaignDetailScreen(),
+                                              ),
+                                            );
+                                          },
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: AppColors.primary,
                                             foregroundColor: Colors.white,
@@ -636,6 +673,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                     ),
                   ),
+                ),
 
                   const SizedBox(height: 24),
 
@@ -717,9 +755,43 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             currentAmount: 15000000,
                             targetAmount: 75000000,
                             daysLeft: '12 hari lagi',
-                            onTap: () => _showNotification(
-                              'Kampanye Sekolah Maluku Utara',
-                            ),
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => const CampaignDetailScreen(
+                                    campaign: CampaignModel(
+                                      id: 'campaign_maluku',
+                                      title:
+                                          'Bantuan Sekolah terpelosok di Maluku Utara',
+                                      category: 'PENDIDIKAN',
+                                      imageUrl:
+                                          'https://images.unsplash.com/photo-1577896851231-70ef18881754?w=500',
+                                      currentAmount: 15000000,
+                                      targetAmount: 75000000,
+                                      donorsCount: 420,
+                                      updatesCount: 3,
+                                      disbursementsCount: 1,
+                                      organizerName: 'Yayasan Peduli Maluku',
+                                      organizerAvatarUrl:
+                                          'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200',
+                                      storyDate: '12 September 2026',
+                                      storyContent:
+                                          'Bantuan fasilitas pendidikan, perbaikan ruang kelas, dan perlengkapan belajar bagi murid di Halmahera.',
+                                      urgentNeeds: [
+                                        UrgentNeed(
+                                          title: 'Buku Pelajaran',
+                                          iconType: 'book',
+                                        ),
+                                        UrgentNeed(
+                                          title: 'Seragam Sekolah',
+                                          iconType: 'clothes',
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                         ),
                         const SizedBox(width: 14),
@@ -733,9 +805,43 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             currentAmount: 24500000,
                             targetAmount: 100000000,
                             daysLeft: '28 hari lagi',
-                            onTap: () => _showNotification(
-                              'Kampanye Infrastruktur Papua Barat',
-                            ),
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => const CampaignDetailScreen(
+                                    campaign: CampaignModel(
+                                      id: 'campaign_papua',
+                                      title:
+                                          'Bantuan Infrastruktur Sekolah Prihatinkan di Papua Barat',
+                                      category: 'INFRASTRUKTUR',
+                                      imageUrl:
+                                          'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=500',
+                                      currentAmount: 24500000,
+                                      targetAmount: 100000000,
+                                      donorsCount: 890,
+                                      updatesCount: 5,
+                                      disbursementsCount: 2,
+                                      organizerName: 'Komunitas Peduli Papua',
+                                      organizerAvatarUrl:
+                                          'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200',
+                                      storyDate: '5 Oktober 2026',
+                                      storyContent:
+                                          'Pembangunan ruang kelas baru dan jembatan penyeberangan aman untuk anak-anak sekolah di pedalaman Papua Barat.',
+                                      urgentNeeds: [
+                                        UrgentNeed(
+                                          title: 'Bahan Bangunan',
+                                          iconType: 'building',
+                                        ),
+                                        UrgentNeed(
+                                          title: 'Fasilitas Air',
+                                          iconType: 'water',
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                         ),
                       ],
@@ -748,44 +854,103 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           ),
         ],
-      ),
+      );
+  }
 
-      // Floating Modern Bottom Navigation Bar
-      bottomNavigationBar: Container(
-        height: 70,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.primary.withValues(alpha: 0.12),
-              blurRadius: 20,
-              offset: const Offset(0, -4),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+  Widget _buildHistoryTab() {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildNavItem(
-              index: 0,
-              icon: Icons.home_rounded,
-              label: 'Beranda',
+            const Text(
+              'Riwayat Donasi',
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w800,
+                color: Color(0xFF321E54),
+                letterSpacing: -0.3,
+              ),
             ),
-            _buildNavItem(
-              index: 1,
-              icon: Icons.volunteer_activism_outlined,
-              label: 'Donasi',
+            const SizedBox(height: 4),
+            const Text(
+              'Daftar kebaikan yang telah kamu salurkan',
+              style: TextStyle(
+                fontSize: 13,
+                color: Color(0xFF6B5E82),
+              ),
             ),
-            _buildNavItem(
-              index: 2,
-              icon: Icons.receipt_long_outlined,
-              label: 'Riwayat',
-            ),
-            _buildNavItem(
-              index: 3,
-              icon: Icons.person_outline_rounded,
-              label: 'Akun',
+            const SizedBox(height: 20),
+            Expanded(
+              child: ListView(
+                physics: const BouncingScrollPhysics(),
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.primary.withValues(alpha: 0.06),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 44,
+                          height: 44,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFEADBFC),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Icon(
+                            Icons.favorite_rounded,
+                            color: AppColors.primary,
+                            size: 24,
+                          ),
+                        ),
+                        const SizedBox(width: 14),
+                        const Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Bantuan Gempa NTT',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFF332052),
+                                ),
+                              ),
+                              SizedBox(height: 4),
+                              Text(
+                                '15 Okt 2026 • QRIS • Berhasil',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: Color(0xFF8B829D),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Text(
+                          'Rp100.000',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w800,
+                            color: AppColors.primary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -793,34 +958,92 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildNavItem({
-    required int index,
-    required IconData icon,
-    required String label,
-  }) {
-    final isSelected = _currentNavIndex == index;
-
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _currentNavIndex = index;
-        });
-        if (index > 0) {
-          _showNotification('Menu $label');
-        }
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? const Color(0xFFEADBFC)
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Icon(
-          icon,
-          color: isSelected ? AppColors.primary : const Color(0xFF8B829D),
-          size: 26,
+  Widget _buildProfileTab(String displayName) {
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+        child: Column(
+          children: [
+            const SizedBox(height: 20),
+            Center(
+              child: Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFEADBFC),
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: AppColors.primary.withValues(alpha: 0.3),
+                    width: 2,
+                  ),
+                ),
+                child: const Icon(
+                  Icons.person_rounded,
+                  color: AppColors.primary,
+                  size: 42,
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              displayName,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w800,
+                color: Color(0xFF321E54),
+              ),
+            ),
+            const SizedBox(height: 4),
+            const Text(
+              'donatur.baik@benevo.id',
+              style: TextStyle(
+                fontSize: 13,
+                color: Color(0xFF7A6E91),
+              ),
+            ),
+            const SizedBox(height: 30),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.primary.withValues(alpha: 0.06),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Material(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                clipBehavior: Clip.antiAlias,
+                child: Column(
+                  children: [
+                    ListTile(
+                      leading: const Icon(Icons.person_outline_rounded, color: AppColors.primary),
+                      title: const Text('Edit Profil', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                      trailing: const Icon(Icons.chevron_right_rounded),
+                      onTap: () => _showNotification('Fitur Edit Profil'),
+                    ),
+                    const Divider(height: 1),
+                    ListTile(
+                      leading: const Icon(Icons.notifications_none_rounded, color: AppColors.primary),
+                      title: const Text('Notifikasi', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                      trailing: const Icon(Icons.chevron_right_rounded),
+                      onTap: () => _showNotification('Fitur Notifikasi'),
+                    ),
+                    const Divider(height: 1),
+                    ListTile(
+                      leading: const Icon(Icons.security_rounded, color: AppColors.primary),
+                      title: const Text('Keamanan Akun', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                      trailing: const Icon(Icons.chevron_right_rounded),
+                      onTap: () => _showNotification('Fitur Keamanan'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
