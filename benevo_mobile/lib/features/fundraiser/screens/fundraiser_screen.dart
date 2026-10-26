@@ -30,31 +30,28 @@ class _FundraiserScreenState extends State<FundraiserScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        top: false,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // 1. Top App Bar & Hero Header
-              _buildHeroHeader(context),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // 1. Top App Bar & Hero Header
+            _buildHeroHeader(context),
 
-              // 2. Section "Cara Galang dana di Benevo"
-              _buildCaraGalangDanaSection(),
+            // 2. Section "Cara Galang dana di Benevo"
+            _buildCaraGalangDanaSection(),
 
-              const SizedBox(height: 18),
+            const SizedBox(height: 18),
 
-              // 3. Section "Tips Galang dana"
-              _buildTipsSection(),
+            // 3. Section "Tips Galang dana"
+            _buildTipsSection(),
 
-              const SizedBox(height: 22),
+            const SizedBox(height: 22),
 
-              // 4. Section CTA "Sudah tahu tata caranya, kan?"
-              _buildCtaSection(),
+            // 4. Section CTA "Sudah tahu tata caranya, kan?"
+            _buildCtaSection(),
 
-              const SizedBox(height: 24),
-            ],
-          ),
+            const SizedBox(height: 24),
+          ],
         ),
       ),
     );
@@ -68,27 +65,26 @@ class _FundraiserScreenState extends State<FundraiserScreen> {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            Color(0xFFF9F5FE),
-            Color(0xFFE9DCF8),
-            Color(0xFFC7B3E5),
+            Colors.white,
+            Color(0xFFF7F4FD),
+            Color(0xFFE8DCF7),
+            Color(0xFFC7B1E6),
+            Color(0xFFA189D3),
           ],
-        ),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(28),
-          bottomRight: Radius.circular(28),
+          stops: [0.0, 0.12, 0.36, 0.70, 1.0],
         ),
       ),
       child: SafeArea(
         bottom: false,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+          padding: const EdgeInsets.fromLTRB(20.0, 12.0, 20.0, 0),
           child: Column(
             children: [
               // Navigation Bar: Back button + Centered Logo
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Back button (lavender circular button)
+                  // Back button (white circular button with subtle purple drop shadow)
                   GestureDetector(
                     onTap: () {
                       if (widget.onBackToHome != null) {
@@ -98,16 +94,20 @@ class _FundraiserScreenState extends State<FundraiserScreen> {
                       }
                     },
                     child: Container(
-                      width: 40,
-                      height: 40,
+                      width: 42,
+                      height: 42,
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.90),
+                        color: Colors.white,
                         shape: BoxShape.circle,
+                        border: Border.all(
+                          color: const Color(0xFFEDE5F8),
+                          width: 1.0,
+                        ),
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.primary.withValues(alpha: 0.08),
-                            blurRadius: 10,
-                            offset: const Offset(0, 3),
+                            color: const Color(0xFF5B33A7).withValues(alpha: 0.12),
+                            blurRadius: 12,
+                            offset: const Offset(0, 4),
                           ),
                         ],
                       ),
@@ -115,15 +115,14 @@ class _FundraiserScreenState extends State<FundraiserScreen> {
                       child: const Icon(
                         Icons.arrow_back_rounded,
                         color: AppColors.primary,
-                        size: 22,
+                        size: 20,
                       ),
                     ),
                   ),
 
-                  // Brand Logo "Benevo"
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  // Brand Logo "Benevo" with elevated golden dot above-right of "o"
+                  Stack(
+                    clipBehavior: Clip.none,
                     children: [
                       RichText(
                         text: const TextSpan(
@@ -131,62 +130,68 @@ class _FundraiserScreenState extends State<FundraiserScreen> {
                             TextSpan(
                               text: 'Bene',
                               style: TextStyle(
-                                fontSize: 26,
+                                fontSize: 27,
                                 fontWeight: FontWeight.w800,
                                 color: Color(0xFF4C2A91),
-                                letterSpacing: -0.5,
+                                letterSpacing: -0.6,
                               ),
                             ),
                             TextSpan(
                               text: 'vo',
                               style: TextStyle(
-                                fontSize: 26,
+                                fontSize: 27,
                                 fontWeight: FontWeight.w800,
                                 color: Color(0xFFDCA722),
-                                letterSpacing: -0.5,
+                                letterSpacing: -0.6,
                               ),
                             ),
                           ],
                         ),
                       ),
-                      const SizedBox(width: 2),
-                      Container(
-                        margin: const EdgeInsets.only(top: 3),
-                        width: 7,
-                        height: 7,
-                        decoration: const BoxDecoration(
-                          color: Color(0xFFDCA722),
-                          shape: BoxShape.circle,
+                      Positioned(
+                        right: -5,
+                        top: -3,
+                        child: Container(
+                          width: 8,
+                          height: 8,
+                          decoration: const BoxDecoration(
+                            color: Color(0xFFDCA722),
+                            shape: BoxShape.circle,
+                          ),
                         ),
                       ),
                     ],
                   ),
 
                   // Symmetrical spacer for exact centering
-                  const SizedBox(width: 40),
+                  const SizedBox(width: 42),
                 ],
               ),
 
               const SizedBox(height: 12),
 
-              // Hero Illustration
-              Image.asset(
-                'assets/images/fundraiser_hero.png',
-                height: 195,
-                fit: BoxFit.contain,
+              // Hero Illustration (Undistorted & transparent background)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 14.0),
+                child: Image.asset(
+                  'assets/images/fundraiser_hero.png',
+                  height: 185,
+                  fit: BoxFit.contain,
+                ),
               ),
 
-              const SizedBox(height: 14),
+              const SizedBox(height: 16),
 
               // Headline
               const Text(
                 'Galang Dana untuk semua\nyang membutuhkan!',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 19,
                   fontWeight: FontWeight.w800,
-                  color: Color(0xFF321E54),
+                  color: Color(0xFF341B5C),
                   height: 1.25,
+                  letterSpacing: -0.2,
                 ),
               ),
 
@@ -196,43 +201,44 @@ class _FundraiserScreenState extends State<FundraiserScreen> {
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
-                  'Di Benevo ada banyak orang dermawan yang berdonasi untuk menolong sesama!',
+                  'Di Benevo ada banyak orang dermawan yang\nberdonasi untuk menolong sesama!',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 12.5,
                     fontWeight: FontWeight.w500,
-                    color: Color(0xFF53456D),
+                    color: Color(0xFF4A3C63),
                     height: 1.35,
                   ),
                 ),
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: 18),
 
               // Hero Button
               ElevatedButton(
                 onPressed: _onStartFundraiser,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
+                  backgroundColor: const Color(0xFF673AB7),
                   foregroundColor: Colors.white,
                   elevation: 4,
-                  shadowColor: AppColors.primary.withValues(alpha: 0.35),
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 13),
+                  shadowColor: const Color(0xFF673AB7).withValues(alpha: 0.38),
+                  padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 13),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
                 child: const Text(
                   'Galang dana sekarang!',
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 14.5,
                     fontWeight: FontWeight.w700,
                     color: Colors.white,
+                    letterSpacing: 0.1,
                   ),
                 ),
               ),
 
-              const SizedBox(height: 14),
+              const SizedBox(height: 22),
             ],
           ),
         ),
