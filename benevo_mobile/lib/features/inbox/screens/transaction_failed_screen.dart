@@ -107,10 +107,14 @@ class TransactionFailedScreen extends StatelessWidget {
                           shape: BoxShape.circle,
                           color: Color(0xFFEA384D),
                         ),
-                        child: const Icon(
-                          Icons.close_rounded,
-                          color: Colors.white,
-                          size: 52,
+                        child: Center(
+                          child: CustomPaint(
+                            size: const Size(48, 48),
+                            painter: const BoldCrossPainter(
+                              color: Colors.white,
+                              strokeWidth: 9.5,
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -559,4 +563,38 @@ class TransactionFailedScreen extends StatelessWidget {
       ],
     );
   }
+}
+
+class BoldCrossPainter extends CustomPainter {
+  final Color color;
+  final double strokeWidth;
+
+  const BoldCrossPainter({
+    this.color = Colors.white,
+    this.strokeWidth = 9.5,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth
+      ..strokeCap = StrokeCap.round;
+
+    canvas.drawLine(
+      Offset(size.width * 0.25, size.height * 0.25),
+      Offset(size.width * 0.75, size.height * 0.75),
+      paint,
+    );
+
+    canvas.drawLine(
+      Offset(size.width * 0.75, size.height * 0.25),
+      Offset(size.width * 0.25, size.height * 0.75),
+      paint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

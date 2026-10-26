@@ -107,10 +107,14 @@ class TransactionSuccessScreen extends StatelessWidget {
                           shape: BoxShape.circle,
                           color: Color(0xFF53388A),
                         ),
-                        child: const Icon(
-                          Icons.check_rounded,
-                          color: Colors.white,
-                          size: 52,
+                        child: Center(
+                          child: CustomPaint(
+                            size: const Size(52, 52),
+                            painter: const BoldCheckPainter(
+                              color: Colors.white,
+                              strokeWidth: 9.5,
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -510,4 +514,34 @@ class TransactionSuccessScreen extends StatelessWidget {
       ],
     );
   }
+}
+
+class BoldCheckPainter extends CustomPainter {
+  final Color color;
+  final double strokeWidth;
+
+  const BoldCheckPainter({
+    this.color = Colors.white,
+    this.strokeWidth = 9.5,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round;
+
+    final path = Path();
+    path.moveTo(size.width * 0.22, size.height * 0.52);
+    path.lineTo(size.width * 0.44, size.height * 0.74);
+    path.lineTo(size.width * 0.78, size.height * 0.28);
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

@@ -67,7 +67,7 @@ class RiwayatTabView extends StatelessWidget {
       paymentMethod: 'BRI Virtual Account',
       amount: 'Rp 500.000',
       category: 'Medis & Kesehatan',
-      imagePath: 'assets/images/campaigns/s2_ntt.png',
+      imagePath: 'assets/images/campaigns/s2_anak_ntt.png',
       transactionId: '#INV-20260919-990011',
     ),
     DonationHistoryItem(
