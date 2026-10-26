@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/colors.dart';
+import 'fundraiser_category_screen.dart';
 
 /// Screen for "Galang Dana" (Fundraiser flow & guide)
 /// Separated into its own dedicated screen file as requested.
@@ -17,11 +18,11 @@ class FundraiserScreen extends StatefulWidget {
 
 class _FundraiserScreenState extends State<FundraiserScreen> {
   void _onStartFundraiser() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Membuka formulir pembuatan penggalangan dana...'),
-        backgroundColor: AppColors.primary,
-        duration: Duration(seconds: 2),
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => FundraiserCategoryScreen(
+          onBackToHome: widget.onBackToHome,
+        ),
       ),
     );
   }
