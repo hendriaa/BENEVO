@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../core/constants/colors.dart';
 import '../../home/widgets/benevo_bottom_nav_bar.dart';
 import 'medical_fundraiser_form_screen.dart';
+import 'other_category_select_screen.dart';
 
 /// Screen for selecting fundraiser category ("Pengajuan Menggalang Dana")
 /// matching media_1793020217536_bd0e3a31.png and media_1793020240603_83ba8be0.png
@@ -320,11 +320,9 @@ class _FundraiserCategoryScreenState extends State<FundraiserCategoryScreen> {
                 subtitle: 'serupa dengan jenis bantuan, bencana alam, pendidikan, kemanusiaan, dsb.',
                 buttonText: 'Buat galang dana',
                 onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Kategori bantuan lainnya akan segera tersedia.'),
-                      backgroundColor: AppColors.primary,
-                      duration: Duration(seconds: 2),
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const OtherCategorySelectScreen(),
                     ),
                   );
                 },
@@ -357,7 +355,6 @@ class _FundraiserCategoryScreenState extends State<FundraiserCategoryScreen> {
     required VoidCallback onTap,
   }) {
     return Container(
-      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -373,62 +370,72 @@ class _FundraiserCategoryScreenState extends State<FundraiserCategoryScreen> {
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              iconWidget,
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 13.5,
-                        fontWeight: FontWeight.w800,
-                        color: Color(0xFF261943),
-                        height: 1.25,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      subtitle,
-                      style: const TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w500,
-                        color: Color(0xFF756E87),
-                        height: 1.3,
+                    iconWidget,
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            title,
+                            style: const TextStyle(
+                              fontSize: 13.5,
+                              fontWeight: FontWeight.w800,
+                              color: Color(0xFF261943),
+                              height: 1.25,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            subtitle,
+                            style: const TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFF756E87),
+                              height: 1.3,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 14),
-          OutlinedButton(
-            onPressed: onTap,
-            style: OutlinedButton.styleFrom(
-              side: const BorderSide(color: Color(0xFF5B33A7), width: 1.2),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              padding: const EdgeInsets.symmetric(vertical: 10),
+                const SizedBox(height: 14),
+                OutlinedButton(
+                  onPressed: onTap,
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(color: Color(0xFF5B33A7), width: 1.2),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                  ),
+                  child: Text(
+                    buttonText,
+                    style: const TextStyle(
+                      color: Color(0xFF5B33A7),
+                      fontWeight: FontWeight.w700,
+                      fontSize: 13,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            child: Text(
-              buttonText,
-              style: const TextStyle(
-                color: Color(0xFF5B33A7),
-                fontWeight: FontWeight.w700,
-                fontSize: 13,
-              ),
-            ),
           ),
-        ],
+        ),
       ),
     );
   }
