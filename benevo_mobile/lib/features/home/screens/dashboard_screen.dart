@@ -5,6 +5,9 @@ import '../widgets/category_item.dart';
 import '../widgets/benevo_bottom_nav_bar.dart';
 import '../../donation/screens/campaign_detail_screen.dart';
 import '../../donation/models/campaign_model.dart';
+import '../../donation/screens/donation_catalog_screen.dart';
+import '../../inbox/screens/inbox_screen.dart';
+import 'search_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   final String userName;
@@ -57,8 +60,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
         index: _currentNavIndex,
         children: [
           _buildHomeTab(displayName),
-          const CampaignDetailScreen(isEmbeddedInDashboard: true),
-          _buildHistoryTab(),
+          DonationCatalogScreen(
+            onProfileTap: () {
+              setState(() {
+                _currentNavIndex = 3;
+              });
+            },
+          ),
+          InboxScreen(
+            onBackToHome: () {
+              setState(() {
+                _currentNavIndex = 0;
+              });
+            },
+          ),
           _buildProfileTab(displayName),
         ],
       ),
@@ -153,6 +168,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             ),
                             child: TextField(
                               controller: _searchController,
+                              readOnly: true,
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => const SearchScreen(),
+                                  ),
+                                );
+                              },
                               style: const TextStyle(
                                 fontSize: 13,
                                 color: AppColors.textPrimary,
@@ -586,7 +609,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                             Navigator.of(context).push(
                                               MaterialPageRoute(
                                                 builder: (_) =>
-                                                    const CampaignDetailScreen(),
+                                                    const CampaignDetailScreen(
+                                                  openDonationImmediately: true,
+                                                ),
                                               ),
                                             );
                                           },
@@ -857,106 +882,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       );
   }
 
-  Widget _buildHistoryTab() {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Riwayat Donasi',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w800,
-                color: Color(0xFF321E54),
-                letterSpacing: -0.3,
-              ),
-            ),
-            const SizedBox(height: 4),
-            const Text(
-              'Daftar kebaikan yang telah kamu salurkan',
-              style: TextStyle(
-                fontSize: 13,
-                color: Color(0xFF6B5E82),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: ListView(
-                physics: const BouncingScrollPhysics(),
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.primary.withValues(alpha: 0.06),
-                          blurRadius: 12,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 44,
-                          height: 44,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFEADBFC),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: const Icon(
-                            Icons.favorite_rounded,
-                            color: AppColors.primary,
-                            size: 24,
-                          ),
-                        ),
-                        const SizedBox(width: 14),
-                        const Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Bantuan Gempa NTT',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700,
-                                  color: Color(0xFF332052),
-                                ),
-                              ),
-                              SizedBox(height: 4),
-                              Text(
-                                '15 Okt 2026 • QRIS • Berhasil',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  color: Color(0xFF8B829D),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Text(
-                          'Rp100.000',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w800,
-                            color: AppColors.primary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+
 
   Widget _buildProfileTab(String displayName) {
     return SafeArea(
