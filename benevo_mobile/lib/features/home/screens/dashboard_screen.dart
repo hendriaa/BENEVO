@@ -7,6 +7,7 @@ import '../../donation/screens/campaign_detail_screen.dart';
 import '../../donation/models/campaign_model.dart';
 import '../../donation/screens/donation_catalog_screen.dart';
 import '../../inbox/screens/inbox_screen.dart';
+import 'category_campaigns_screen.dart';
 import 'search_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -27,6 +28,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int _selectedFilterIndex = 0;
   int _currentNavIndex = 0;
   final TextEditingController _searchController = TextEditingController();
+  final ScrollController _categoryScrollController = ScrollController();
 
   final List<String> _filters = [
     'Semua',
@@ -34,9 +36,46 @@ class _DashboardScreenState extends State<DashboardScreen> {
     'Kesehatan',
   ];
 
+  final List<Map<String, dynamic>> _categories = const [
+    {'title': 'Bencana Alam', 'icon': Icons.flood_outlined},
+    {'title': 'Balita & Anak Sakit', 'icon': Icons.child_care_rounded},
+    {'title': 'Bantuan & Medis', 'icon': Icons.medical_services_outlined},
+    {'title': 'Bantuan Pendidikan', 'icon': Icons.school_outlined},
+    {'title': 'Lingkungan', 'icon': Icons.park_outlined},
+    {'title': 'Kegiatan Sosial', 'icon': Icons.groups_outlined},
+    {'title': 'Infrastruktur Umum', 'icon': Icons.apartment_outlined},
+    {'title': 'Karya Kreatif & Usaha', 'icon': Icons.storefront_outlined},
+    {'title': 'Panti Asuhan', 'icon': Icons.family_restroom_rounded},
+    {'title': 'Tempat Ibadah', 'icon': Icons.mosque_outlined},
+    {'title': 'Menolong Hewan', 'icon': Icons.pets_outlined},
+    {'title': 'Difabel', 'icon': Icons.accessible_rounded},
+  ];
+
+  void _scrollCategoriesRight() {
+    if (_categoryScrollController.hasClients) {
+      final maxScroll = _categoryScrollController.position.maxScrollExtent;
+      final currentScroll = _categoryScrollController.offset;
+      if (currentScroll >= maxScroll - 10) {
+        _categoryScrollController.animateTo(
+          0,
+          duration: const Duration(milliseconds: 400),
+          curve: Curves.easeInOut,
+        );
+      } else {
+        final targetScroll = (currentScroll + 240).clamp(0.0, maxScroll);
+        _categoryScrollController.animateTo(
+          targetScroll,
+          duration: const Duration(milliseconds: 350),
+          curve: Curves.easeOutCubic,
+        );
+      }
+    }
+  }
+
   @override
   void dispose() {
     _searchController.dispose();
+    _categoryScrollController.dispose();
     super.dispose();
   }
 
@@ -725,7 +764,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             color: AppColors.textSecondary,
                             size: 24,
                           ),
-                          onPressed: () => _showNotification('Melihat semua kategori'),
+                          onPressed: _scrollCategoriesRight,
                         ),
                       ],
                     ),
@@ -733,34 +772,36 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                   const SizedBox(height: 12),
 
-                  // Category Items Row
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CategoryItem(
-                          title: 'Bencana Alam',
-                          icon: Icons.flood_outlined,
-                          onTap: () => _showNotification('Kategori Bencana Alam'),
-                        ),
-                        CategoryItem(
-                          title: 'Balita & Anak Sakit',
-                          icon: Icons.child_care_rounded,
-                          onTap: () => _showNotification('Kategori Balita & Anak Sakit'),
-                        ),
-                        CategoryItem(
-                          title: 'Bantuan & Medis',
-                          icon: Icons.medical_services_outlined,
-                          onTap: () => _showNotification('Kategori Bantuan & Medis'),
-                        ),
-                        CategoryItem(
-                          title: 'Bantuan Pendidikan',
-                          icon: Icons.school_outlined,
-                          onTap: () => _showNotification('Kategori Bantuan Pendidikan'),
-                        ),
-                      ],
+                  // Category Items Horizontal Scroll
+                  SizedBox(
+                    height: 104,
+                    child: ListView.separated(
+                      controller: _categoryScrollController,
+                      scrollDirection: Axis.horizontal,
+                      physics: const BouncingScrollPhysics(),
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      itemCount: _categories.length,
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(width: 12),
+                      itemBuilder: (context, index) {
+                        final category = _categories[index];
+                        final title = category['title'] as String;
+                        final icon = category['icon'] as IconData;
+
+                        return CategoryItem(
+                          title: title,
+                          icon: icon,
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => CategoryCampaignsScreen(
+                                  categoryTitle: title,
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
                     ),
                   ),
 
