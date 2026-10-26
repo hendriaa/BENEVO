@@ -62,7 +62,7 @@ void main() {
     expect(find.text('KAMPANYE PENERIMA'), findsOneWidget);
     expect(find.text('Rincian Transaksi'), findsOneWidget);
     expect(find.text('Lunas'), findsOneWidget);
-    expect(find.text('#INV-20260927-334458'), findsOneWidget);
+    expect(find.text('#BNV-20260921-334456'), findsOneWidget);
     expect(find.text('Unduh E-receipt'), findsOneWidget);
     expect(find.text('Kembali ke Beranda'), findsOneWidget);
   });

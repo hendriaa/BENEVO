@@ -8,7 +8,6 @@ class TransactionFailedScreen extends StatelessWidget {
   final String campaignCategory;
   final String campaignImage;
   final String totalCollected;
-  final String transactionTime;
   final String paymentMethod;
   final String donorName;
   final String donationAmount;
@@ -16,12 +15,11 @@ class TransactionFailedScreen extends StatelessWidget {
 
   const TransactionFailedScreen({
     super.key,
-    this.transactionId = '#INV-20260921-224458-EXPIRED',
+    this.transactionId = '#BNV-20260921-334456-EXPIRED',
     this.campaignTitle = 'Patungan Untuk Hutan',
-    this.campaignCategory = 'Lingkungan',
+    this.campaignCategory = 'Bencana Alam',
     this.campaignImage = 'assets/images/campaigns/s2_karhutla.png',
     this.totalCollected = 'Rp127.321.984',
-    this.transactionTime = '21/09/2026, 10:15 WIB',
     this.paymentMethod = 'GoPay',
     this.donorName = 'Hanzel Canary',
     this.donationAmount = 'Rp100.000',
@@ -31,112 +29,148 @@ class TransactionFailedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F8FD),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF58329E),
-        elevation: 0,
-        centerTitle: false,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: const Text(
-          'Transaksi Benevo',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: 16.0),
-            child: Icon(
-              Icons.lock_outline_rounded,
-              color: Colors.white,
-              size: 20,
+      backgroundColor: const Color(0xFFFAF9FD),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: [
+                Color(0xFF53388A),
+                Color(0xFF6B459E),
+                Color(0xFFC4A559),
+                Color(0xFFE5C05E),
+              ],
             ),
           ),
-        ],
+          child: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            centerTitle: false,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            title: const Text(
+              'Transaksi Benevo',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            actions: const [
+              Padding(
+                padding: EdgeInsets.only(right: 18.0),
+                child: Icon(
+                  Icons.lock_outline_rounded,
+                  color: Colors.white,
+                  size: 22,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 24.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 22.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Failed red circular badge
-            Container(
-              width: 76,
-              height: 76,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(0xFFEF4444),
-              ),
-              child: const Center(
-                child: Icon(
-                  Icons.close_rounded,
-                  color: Colors.white,
-                  size: 46,
+            const SizedBox(height: 10),
+
+            // Multi-layered Circular Badge (Soft Red Outer Ring -> White Ring -> Coral Red Circle -> Cross)
+            Center(
+              child: Container(
+                width: 140,
+                height: 140,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xFFFFD1D5),
+                ),
+                child: Center(
+                  child: Container(
+                    width: 108,
+                    height: 108,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white,
+                    ),
+                    child: Center(
+                      child: Container(
+                        width: 90,
+                        height: 90,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Color(0xFFEA384D),
+                        ),
+                        child: const Icon(
+                          Icons.close_rounded,
+                          color: Colors.white,
+                          size: 52,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 18),
 
             // Title
             const Text(
               'Pembayaran Belum berhasil',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w800,
-                color: Color(0xFF26183F),
-                letterSpacing: -0.3,
+                fontSize: 22,
+                fontWeight: FontWeight.w900,
+                color: Color(0xFF111827),
+                letterSpacing: -0.4,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 6),
 
             // Subtitle
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: Text(
-                'Terjadi error, atau kendala tidak memasang saldo anda, sesi pembayaran berakhir atau transaksi dibatalkan oleh bank',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 12.5,
-                  height: 1.45,
-                  color: Color(0xFF757185),
-                  fontWeight: FontWeight.w500,
-                ),
+            const Text(
+              'terjadi error, atau kendala tidak memotong saldo anda,\nsesi pembayaran berakhir atau transaksi dibatalkan\noleh bank',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 11,
+                height: 1.4,
+                color: Color(0xFF6B7280),
+                fontWeight: FontWeight.w500,
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
 
-            // Diagnostik Pembayaran Section
+            // Diagnostik Pembayaran Section Header
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
                   'Diagnostik Pembayaran',
                   style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF26183F),
+                    fontSize: 12.5,
+                    fontWeight: FontWeight.w800,
+                    color: Color(0xFF58329E),
                   ),
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 4,
+                    horizontal: 8,
+                    vertical: 3,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFEDE7F6),
-                    borderRadius: BorderRadius.circular(12),
+                    color: const Color(0xFFEDE9FE),
+                    borderRadius: BorderRadius.circular(6),
                   ),
                   child: const Text(
                     'Auto-Detect',
                     style: TextStyle(
-                      fontSize: 10.5,
+                      fontSize: 10,
                       fontWeight: FontWeight.w700,
                       color: Color(0xFF58329E),
                     ),
@@ -146,22 +180,29 @@ class TransactionFailedScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
 
-            // Error diagnostic card
+            // Diagnostic Box
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(14),
+              padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: const Color(0xFFFFF1F2),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFFFECDD3)),
+                color: const Color(0xFFF7F5FC),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: const Color(0xFFEFE9FA)),
               ),
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(
-                    Icons.cancel_rounded,
-                    color: Color(0xFFEF4444),
-                    size: 22,
+                  Container(
+                    width: 22,
+                    height: 22,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFEA384D),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: const Icon(
+                      Icons.close_rounded,
+                      color: Colors.white,
+                      size: 15,
+                    ),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
@@ -169,20 +210,20 @@ class TransactionFailedScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          'Alasan Kendala :',
+                          'Alasan Kendala',
                           style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xFF991B1B),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w800,
+                            color: Color(0xFF58329E),
                           ),
                         ),
                         const SizedBox(height: 2),
                         Text(
                           failureReason,
                           style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xFF881337),
+                            fontSize: 11.5,
+                            fontWeight: FontWeight.w500,
+                            color: Color(0xFF374151),
                           ),
                         ),
                       ],
@@ -191,108 +232,147 @@ class TransactionFailedScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 18),
 
-            // KAMPANYE PENERIMA section
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'KAMPANYE PENERIMA',
-                style: TextStyle(
-                  fontSize: 11.5,
-                  fontWeight: FontWeight.w800,
-                  color: Colors.black.withValues(alpha: 0.55),
-                  letterSpacing: 0.8,
-                ),
-              ),
-            ),
-            const SizedBox(height: 8),
-
-            // Campaign Card
+            // KAMPANYE PENERIMA Card
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: const Color(0xFFEBE6F3)),
+                border: Border.all(color: const Color(0xFFE5E7EB)),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.03),
+                    color: Colors.black.withValues(alpha: 0.02),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
                 ],
               ),
-              child: Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Container(
-                      width: 64,
-                      height: 64,
-                      color: const Color(0xFFEDE7F6),
-                      child: Image.asset(
-                        campaignImage,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => const Icon(
-                          Icons.park_rounded,
-                          color: AppColors.primary,
-                          size: 32,
+                  // Card Header
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'KAMPANYE PENERIMA',
+                        style: TextStyle(
+                          fontSize: 10.5,
+                          fontWeight: FontWeight.w800,
+                          color: Color(0xFF374151),
+                          letterSpacing: 0.5,
                         ),
                       ),
-                    ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 3,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFEDE9FE),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          campaignCategory,
+                          style: const TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF58329E),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 3,
-                          ),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFEDE7F6),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          child: Text(
-                            campaignCategory,
-                            style: const TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xFF58329E),
+                  const SizedBox(height: 10),
+
+                  // Campaign Content
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Container(
+                          width: 62,
+                          height: 62,
+                          color: const Color(0xFFEDE7F6),
+                          child: Image.asset(
+                            campaignImage,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) => const Icon(
+                              Icons.park_rounded,
+                              color: AppColors.primary,
+                              size: 32,
                             ),
                           ),
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          campaignTitle,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xFF26183F),
-                            height: 1.25,
-                          ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              campaignTitle,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w800,
+                                color: Color(0xFF111827),
+                                height: 1.25,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            const Row(
+                              children: [
+                                Text(
+                                  'Benevo',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xFF58329E),
+                                  ),
+                                ),
+                                SizedBox(width: 3),
+                                Icon(
+                                  Icons.verified,
+                                  color: Color(0xFF58329E),
+                                  size: 13,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            Row(
+                              children: [
+                                const Text(
+                                  'Terkumpul ',
+                                  style: TextStyle(
+                                    fontSize: 10.5,
+                                    color: Color(0xFF9CA3AF),
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                Text(
+                                  totalCollected,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Color(0xFF58329E),
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          'Terkumpul $totalCollected',
-                          style: const TextStyle(
-                            fontSize: 11,
-                            color: Color(0xFF757185),
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
 
             // RINCIAN TRANSAKSI Card
             Container(
@@ -300,10 +380,10 @@ class TransactionFailedScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: const Color(0xFFEBE6F3)),
+                border: Border.all(color: const Color(0xFFE5E7EB)),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.03),
+                    color: Colors.black.withValues(alpha: 0.02),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -311,56 +391,53 @@ class TransactionFailedScreen extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  // Header
+                  // Card Header
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Icon(
-                        Icons.receipt_long_rounded,
-                        color: Color(0xFF58329E),
-                        size: 20,
+                      const Row(
+                        children: [
+                          Icon(
+                            Icons.receipt_long_rounded,
+                            color: Color(0xFF58329E),
+                            size: 20,
+                          ),
+                          SizedBox(width: 8),
+                          Text(
+                            'Rincian Transaksi',
+                            style: TextStyle(
+                              fontSize: 13.5,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF58329E),
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: 8),
-                      const Text(
-                        'Rincian Transaksi',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFF26183F),
-                        ),
-                      ),
-                      const Spacer(),
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 10,
-                          vertical: 4,
+                          vertical: 3,
                         ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFEF4444),
-                          borderRadius: BorderRadius.circular(12),
+                          color: const Color(0xFFFFD5D8),
+                          borderRadius: BorderRadius.circular(8),
                         ),
                         child: const Text(
                           'Gagal',
                           style: TextStyle(
                             fontSize: 10.5,
                             fontWeight: FontWeight.w700,
-                            color: Colors.white,
+                            color: Color(0xFFEA384D),
                           ),
                         ),
                       ),
                     ],
                   ),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 12.0),
-                    child: Divider(
-                      height: 1,
-                      thickness: 1,
-                      color: Color(0xFFF0EBF5),
-                    ),
-                  ),
+                  const SizedBox(height: 14),
 
                   // Detail rows
                   _buildDetailRow(
-                    label: 'ID Transaksi',
+                    label: 'ID TRANSAKSI',
                     valueWidget: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -369,13 +446,13 @@ class TransactionFailedScreen extends StatelessWidget {
                             transactionId,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
-                              fontSize: 12,
+                              fontSize: 11.5,
                               fontWeight: FontWeight.w600,
-                              color: Color(0xFF26183F),
+                              color: Color(0xFF1F2937),
                             ),
                           ),
                         ),
-                        const SizedBox(width: 4),
+                        const SizedBox(width: 6),
                         GestureDetector(
                           onTap: () {
                             Clipboard.setData(ClipboardData(text: transactionId));
@@ -388,17 +465,12 @@ class TransactionFailedScreen extends StatelessWidget {
                           },
                           child: const Icon(
                             Icons.copy_rounded,
-                            size: 14,
+                            size: 15,
                             color: Color(0xFF58329E),
                           ),
                         ),
                       ],
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  _buildDetailRow(
-                    label: 'Waktu Transaksi',
-                    value: transactionTime,
                   ),
                   const SizedBox(height: 10),
                   _buildDetailRow(
@@ -414,15 +486,13 @@ class TransactionFailedScreen extends StatelessWidget {
                   _buildDetailRow(
                     label: 'Jumlah Donasi',
                     value: donationAmount,
-                    valueColor: const Color(0xFFEF4444),
-                    isBold: true,
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 28),
+            const SizedBox(height: 24),
 
-            // Button: Kembali ke Beranda
+            // Button: Kembali ke Beranda (lavender, rounded rectangle)
             SizedBox(
               width: double.infinity,
               height: 48,
@@ -431,23 +501,23 @@ class TransactionFailedScreen extends StatelessWidget {
                   Navigator.of(context).popUntil((route) => route.isFirst);
                 },
                 icon: const Icon(
-                  Icons.home_outlined,
+                  Icons.home_rounded,
                   color: Color(0xFF58329E),
                   size: 20,
                 ),
                 label: const Text(
                   'Kembali ke Beranda',
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 14.5,
                     fontWeight: FontWeight.w700,
                     color: Color(0xFF58329E),
                   ),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFEDE7F6),
+                  backgroundColor: const Color(0xFFE2D9F3),
                   elevation: 0,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(24),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
               ),
@@ -463,8 +533,6 @@ class TransactionFailedScreen extends StatelessWidget {
     required String label,
     String? value,
     Widget? valueWidget,
-    Color valueColor = const Color(0xFF26183F),
-    bool isBold = false,
   }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -472,8 +540,8 @@ class TransactionFailedScreen extends StatelessWidget {
         Text(
           label,
           style: const TextStyle(
-            fontSize: 12.5,
-            color: Color(0xFF757185),
+            fontSize: 11.5,
+            color: Color(0xFF4B5563),
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -482,10 +550,10 @@ class TransactionFailedScreen extends StatelessWidget {
         else
           Text(
             value ?? '',
-            style: TextStyle(
-              fontSize: 12.5,
-              fontWeight: isBold ? FontWeight.w800 : FontWeight.w600,
-              color: valueColor,
+            style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF1F2937),
             ),
           ),
       ],
