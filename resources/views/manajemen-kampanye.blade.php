@@ -492,6 +492,18 @@
             stroke-linejoin: round;
         }
 
+        .stat-card-purple {
+            background-color: #d8caf2;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .stat-card-purple:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(133, 92, 184, 0.22);
+            background-color: #d1c1ee;
+        }
+
         /* ========== FILTER ROW ========== */
         .filter-row {
             display: flex;
@@ -1128,6 +1140,16 @@
                     <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                 </div>
             </div>
+
+            <a href="{{ route('pengajuan-kampanye') }}" class="stat-card stat-card-purple" style="text-decoration: none;">
+                <div class="stat-card-content">
+                    <div class="stat-card-label" style="color: #4b366a;">Pengajuan Kampanye</div>
+                    <div class="stat-card-value" style="color: #211b2d;">4</div>
+                </div>
+                <div class="stat-card-arrow" style="border-color: #bfaee0; color: #5a388f;">
+                    <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </div>
+            </a>
         </div>
 
         <!-- Filters -->

@@ -40,3 +40,11 @@ Route::get('/donatur', function () {
 Route::get('/kelola-akun-operator', function () {
     return view('kelola-akun-operator');
 })->name('kelola-akun-operator');
+
+Route::get('/pengajuan-kampanye', function () {
+    return view('pengajuan-kampanye');
+})->name('pengajuan-kampanye');
+
+Route::get('/detail-pengajuan-kampanye', function () {
+    return view('detail-pengajuan-kampanye');
+})->name('detail-pengajuan-kampanye');
