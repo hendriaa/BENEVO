@@ -23,19 +23,19 @@ class _DonationCatalogScreenState extends State<DonationCatalogScreen> {
   bool _digalangYayasan = true;
   bool _digalangPublik = false;
 
-  final List<Map<String, dynamic>> _categories = [
-    {'title': 'Bencana Alam', 'icon': Icons.flood_outlined},
-    {'title': 'Balita & Anak Sakit', 'icon': Icons.child_care_rounded},
-    {'title': 'Bantuan & Medis', 'icon': Icons.medical_services_outlined},
-    {'title': 'Bantuan Pendidikan', 'icon': Icons.school_outlined},
-    {'title': 'Lingkungan', 'icon': Icons.park_outlined},
-    {'title': 'Kegiatan Sosial', 'icon': Icons.groups_outlined},
-    {'title': 'Infrastruktur Umum', 'icon': Icons.apartment_outlined},
-    {'title': 'Karya Kreatif & Modal Usaha', 'icon': Icons.storefront_outlined},
-    {'title': 'Panti Asuhan', 'icon': Icons.family_restroom_rounded},
-    {'title': 'Tempat Ibadah', 'icon': Icons.mosque_outlined},
-    {'title': 'Menolong Hewan', 'icon': Icons.pets_outlined},
-    {'title': 'Difabel', 'icon': Icons.accessible_rounded},
+  final List<String> _categories = const [
+    'Bencana Alam',
+    'Balita & Anak Sakit',
+    'Bantuan & Medis',
+    'Bantuan Pendidikan',
+    'Lingkungan',
+    'Kegiatan Sosial',
+    'Infrastruktur Umum',
+    'Karya Kreatif & Modal Usaha',
+    'Panti Asuhan',
+    'Tempat Ibadah',
+    'Menolong Hewan',
+    'Difabel',
   ];
 
   final List<Map<String, dynamic>> _pilihanBenevo = [
@@ -44,14 +44,14 @@ class _DonationCatalogScreenState extends State<DonationCatalogScreen> {
       'image': 'assets/images/campaigns/c1_jalan.png',
       'organizer': 'Benevo',
       'progress': 0.72,
-      'amount': 'Rp128.000.000',
+      'amount': 'Rp 128.000.000',
     },
     {
       'title': 'Pengobatan Bayi Stunting',
       'image': 'assets/images/campaigns/c2_bayi.png',
       'organizer': 'Benevo',
       'progress': 0.54,
-      'amount': 'Rp45.000.000',
+      'amount': 'Rp 45.000.000',
     },
   ];
 
@@ -139,20 +139,20 @@ class _DonationCatalogScreenState extends State<DonationCatalogScreen> {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // Lavender purple gradient behind the categories area
+          // Lavender purple gradient behind top area
           Container(
-            height: 380,
+            height: 430,
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Color(0xFFBCABE4),
-                  Color(0xFFBFAFE6),
-                  Color(0xFFDDD3F0),
+                  Color(0xFF8E73B9),
+                  Color(0xFFA58ECB),
+                  Color(0xFFDDD2EF),
                   Colors.white,
                 ],
-                stops: [0.0, 0.45, 0.80, 1.0],
+                stops: [0.0, 0.40, 0.75, 1.0],
               ),
             ),
           ),
@@ -247,18 +247,19 @@ class _DonationCatalogScreenState extends State<DonationCatalogScreen> {
                     child: Text(
                       'Berdonasi untuk membantu sesama',
                       style: TextStyle(
-                        fontSize: 14.5,
+                        fontSize: 16,
                         fontWeight: FontWeight.w800,
-                        color: Color(0xFF2C2438),
+                        color: Color(0xFF2E1954),
+                        letterSpacing: -0.2,
                       ),
                     ),
                   ),
 
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 14),
 
                   // 12 CATEGORIES GRID (3 rows x 4 columns)
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 14.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
                     child: GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
@@ -267,46 +268,26 @@ class _DonationCatalogScreenState extends State<DonationCatalogScreen> {
                           const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 4,
                         mainAxisSpacing: 10,
-                        crossAxisSpacing: 6,
-                        childAspectRatio: 0.84,
+                        crossAxisSpacing: 4,
+                        childAspectRatio: 0.82,
                       ),
                       itemBuilder: (context, index) {
-                        final cat = _categories[index];
+                        final catTitle = _categories[index];
                         return GestureDetector(
-                          onTap: () => _openCategory(cat['title'] as String),
+                          onTap: () => _openCategory(catTitle),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Container(
-                                width: 44,
-                                height: 44,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color:
-                                          Colors.black.withValues(alpha: 0.05),
-                                      blurRadius: 5,
-                                      offset: const Offset(0, 2),
-                                    ),
-                                  ],
-                                ),
-                                child: Icon(
-                                  cat['icon'] as IconData,
-                                  color: const Color(0xFF5B33A7),
-                                  size: 22,
-                                ),
-                              ),
+                              _buildIllustratedCategoryCard(catTitle),
                               const SizedBox(height: 4),
                               Text(
-                                cat['title'] as String,
+                                catTitle,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
                                   fontSize: 9.8,
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: FontWeight.w700,
                                   color: Color(0xFF2C2438),
                                   height: 1.15,
                                 ),
@@ -326,9 +307,10 @@ class _DonationCatalogScreenState extends State<DonationCatalogScreen> {
                     child: Text(
                       'Pilihan Benevo',
                       style: TextStyle(
-                        fontSize: 15.5,
+                        fontSize: 16.5,
                         fontWeight: FontWeight.w800,
-                        color: Color(0xFF2C2438),
+                        color: Color(0xFF2E1954),
+                        letterSpacing: -0.2,
                       ),
                     ),
                   ),
@@ -337,13 +319,13 @@ class _DonationCatalogScreenState extends State<DonationCatalogScreen> {
 
                   // Horizontal Cards Row for "Pilihan Benevo"
                   SizedBox(
-                    height: 172,
+                    height: 215,
                     child: ListView.separated(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       scrollDirection: Axis.horizontal,
                       itemCount: _pilihanBenevo.length,
                       separatorBuilder: (context, index) =>
-                          const SizedBox(width: 12),
+                          const SizedBox(width: 14),
                       itemBuilder: (context, index) {
                         final item = _pilihanBenevo[index];
                         return _buildPilihanBenevoCard(item);
@@ -359,39 +341,98 @@ class _DonationCatalogScreenState extends State<DonationCatalogScreen> {
                     child: Text(
                       'Penggalangan Dana Lainnya',
                       style: TextStyle(
-                        fontSize: 15.5,
+                        fontSize: 16.5,
                         fontWeight: FontWeight.w800,
-                        color: Color(0xFF2C2438),
+                        color: Color(0xFF2E1954),
+                        letterSpacing: -0.2,
                       ),
                     ),
                   ),
 
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 12),
 
-                  // Filter & Sort Row
+                  // Combined Filter & Sort Bar (Single card with divider)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Row(
-                      children: [
-                        // Urutkan Button
-                        _buildSmallFilterButton(
-                          icon: Icons.swap_vert_rounded,
-                          label: 'Urutkan',
-                          onTap: _openSort,
-                        ),
-                        const SizedBox(width: 8),
+                    child: Container(
+                      height: 42,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: const Color(0xFFDED8EA)),
+                      ),
+                      child: Row(
+                        children: [
+                          // Urutkan Half
+                          Expanded(
+                            child: InkWell(
+                              onTap: _openSort,
+                              borderRadius: const BorderRadius.horizontal(
+                                left: Radius.circular(8),
+                              ),
+                              child: const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.swap_vert_rounded,
+                                    size: 18,
+                                    color: Color(0xFF5B33A7),
+                                  ),
+                                  SizedBox(width: 6),
+                                  Text(
+                                    'Urutkan',
+                                    style: TextStyle(
+                                      fontSize: 12.5,
+                                      fontWeight: FontWeight.w600,
+                                      color: Color(0xFF2C2438),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
 
-                        // Filter Button
-                        _buildSmallFilterButton(
-                          icon: Icons.tune_rounded,
-                          label: 'Filter',
-                          onTap: _openFilter,
-                        ),
-                      ],
+                          // Vertical divider
+                          const VerticalDivider(
+                            width: 1,
+                            thickness: 1,
+                            color: Color(0xFFDED8EA),
+                          ),
+
+                          // Filter Half
+                          Expanded(
+                            child: InkWell(
+                              onTap: _openFilter,
+                              borderRadius: const BorderRadius.horizontal(
+                                right: Radius.circular(8),
+                              ),
+                              child: const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.tune_rounded,
+                                    size: 17,
+                                    color: Color(0xFF5B33A7),
+                                  ),
+                                  SizedBox(width: 6),
+                                  Text(
+                                    'Filter',
+                                    style: TextStyle(
+                                      fontSize: 12.5,
+                                      fontWeight: FontWeight.w600,
+                                      color: Color(0xFF2C2438),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
 
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 14),
 
                   // List of "Penggalangan Dana Lainnya"
                   ListView.separated(
@@ -417,54 +458,229 @@ class _DonationCatalogScreenState extends State<DonationCatalogScreen> {
     );
   }
 
-  Widget _buildSmallFilterButton({
-    required IconData icon,
-    required String label,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(20),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: const Color(0xFFDED8EA)),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
+  /// Illustrated Category Icon Card (matching user's two-tone purple & yellow illustration style)
+  Widget _buildIllustratedCategoryCard(String title) {
+    return Container(
+      width: 50,
+      height: 50,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Center(
+        child: _buildCategoryIconContent(title),
+      ),
+    );
+  }
+
+  Widget _buildCategoryIconContent(String title) {
+    const purple = Color(0xFF5B33A7);
+    const yellow = Color(0xFFF6C744);
+
+    switch (title) {
+      case 'Bencana Alam':
+        return Stack(
+          alignment: Alignment.center,
           children: [
-            Icon(icon, size: 15, color: const Color(0xFF5B33A7)),
-            const SizedBox(width: 4),
-            Text(
-              label,
-              style: const TextStyle(
-                fontSize: 11.5,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF2C2438),
+            Positioned(
+              top: 5,
+              right: 5,
+              child: Container(
+                width: 9,
+                height: 9,
+                decoration: const BoxDecoration(
+                  color: yellow,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
+            const Icon(Icons.flood_rounded, color: purple, size: 26),
+          ],
+        );
+      case 'Balita & Anak Sakit':
+        return Stack(
+          alignment: Alignment.center,
+          children: [
+            Container(
+              width: 26,
+              height: 26,
+              decoration: const BoxDecoration(
+                color: Color(0xFFFEE685),
+                shape: BoxShape.circle,
+              ),
+            ),
+            const Icon(Icons.child_care_rounded, color: purple, size: 24),
+            const Positioned(
+              top: 5,
+              right: 6,
+              child: Icon(Icons.healing_rounded, color: yellow, size: 10),
+            ),
+          ],
+        );
+      case 'Bantuan & Medis':
+        return const Stack(
+          alignment: Alignment.center,
+          children: [
+            Icon(Icons.medical_services_rounded, color: purple, size: 24),
+            Positioned(
+              top: 4,
+              right: 5,
+              child: Icon(Icons.favorite_rounded, color: yellow, size: 12),
+            ),
+          ],
+        );
+      case 'Bantuan Pendidikan':
+        return const Stack(
+          alignment: Alignment.center,
+          children: [
+            Icon(Icons.school_rounded, color: purple, size: 25),
+            Positioned(
+              bottom: 4,
+              right: 5,
+              child: Icon(Icons.auto_stories_rounded, color: yellow, size: 12),
+            ),
+          ],
+        );
+      case 'Lingkungan':
+        return Stack(
+          alignment: Alignment.center,
+          children: [
+            Positioned(
+              top: 5,
+              right: 6,
+              child: Container(
+                width: 9,
+                height: 9,
+                decoration: const BoxDecoration(
+                  color: yellow,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
+            const Icon(Icons.eco_rounded, color: purple, size: 25),
+          ],
+        );
+      case 'Kegiatan Sosial':
+        return const Stack(
+          alignment: Alignment.center,
+          children: [
+            Icon(Icons.inventory_2_rounded, color: purple, size: 24),
+            Positioned(
+              top: 4,
+              right: 5,
+              child: Icon(Icons.favorite_rounded, color: yellow, size: 12),
+            ),
+          ],
+        );
+      case 'Infrastruktur Umum':
+        return Stack(
+          alignment: Alignment.center,
+          children: [
+            Positioned(
+              top: 6,
+              child: Container(
+                width: 22,
+                height: 3,
+                decoration: BoxDecoration(
+                  color: yellow,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+            const Icon(Icons.domain_rounded, color: purple, size: 24),
+          ],
+        );
+      case 'Karya Kreatif & Modal Usaha':
+        return const Stack(
+          alignment: Alignment.center,
+          children: [
+            Icon(Icons.lightbulb_rounded, color: yellow, size: 27),
+            Icon(Icons.auto_awesome_rounded, color: purple, size: 13),
+          ],
+        );
+      case 'Panti Asuhan':
+        return const Stack(
+          alignment: Alignment.center,
+          children: [
+            Positioned(
+              top: 3,
+              child: Icon(Icons.roofing_rounded, color: yellow, size: 26),
+            ),
+            Positioned(
+              bottom: 4,
+              child: Icon(Icons.groups_rounded, color: purple, size: 21),
+            ),
+          ],
+        );
+      case 'Tempat Ibadah':
+        return const Stack(
+          alignment: Alignment.center,
+          children: [
+            Icon(Icons.mosque_rounded, color: purple, size: 24),
+            Positioned(
+              top: 4,
+              right: 6,
+              child: Icon(Icons.star_rounded, color: yellow, size: 11),
+            ),
+          ],
+        );
+      case 'Menolong Hewan':
+        return const Stack(
+          alignment: Alignment.center,
+          children: [
+            Icon(Icons.pets_rounded, color: purple, size: 24),
+            Positioned(
+              top: 5,
+              right: 5,
+              child: Icon(Icons.pets_rounded, color: yellow, size: 12),
+            ),
+          ],
+        );
+      case 'Difabel':
+        return Stack(
+          alignment: Alignment.center,
+          children: [
+            const Icon(Icons.accessible_forward_rounded, color: purple, size: 25),
+            Positioned(
+              bottom: 6,
+              right: 6,
+              child: Container(
+                width: 12,
+                height: 12,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: yellow, width: 2.2),
+                ),
               ),
             ),
           ],
-        ),
-      ),
-    );
+        );
+      default:
+        return const Icon(Icons.category_rounded, color: purple, size: 24);
+    }
   }
 
   Widget _buildPilihanBenevoCard(Map<String, dynamic> item) {
     return GestureDetector(
       onTap: _openCampaignDetail,
       child: Container(
-        width: 148,
+        width: 172,
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(14),
           border: Border.all(color: const Color(0xFFEDE8F5)),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 6,
-              offset: const Offset(0, 2),
+              blurRadius: 8,
+              offset: const Offset(0, 3),
             ),
           ],
         ),
@@ -474,14 +690,14 @@ class _DonationCatalogScreenState extends State<DonationCatalogScreen> {
             // Image
             ClipRRect(
               borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(12)),
+                  const BorderRadius.vertical(top: Radius.circular(14)),
               child: Image.asset(
                 item['image'] as String,
-                height: 84,
+                height: 98,
                 width: double.infinity,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) => Container(
-                  height: 84,
+                  height: 98,
                   color: const Color(0xFFE8E4F0),
                   child: const Icon(Icons.image, color: Colors.grey),
                 ),
@@ -489,7 +705,7 @@ class _DonationCatalogScreenState extends State<DonationCatalogScreen> {
             ),
 
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -498,16 +714,16 @@ class _DonationCatalogScreenState extends State<DonationCatalogScreen> {
                       Text(
                         'Benevo',
                         style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w600,
+                          fontSize: 10.5,
+                          fontWeight: FontWeight.w700,
                           color: Color(0xFF5B33A7),
                         ),
                       ),
-                      SizedBox(width: 2),
+                      SizedBox(width: 3),
                       Icon(
                         Icons.verified_rounded,
                         color: Color(0xFF5B33A7),
-                        size: 11,
+                        size: 12,
                       ),
                     ],
                   ),
@@ -517,13 +733,22 @@ class _DonationCatalogScreenState extends State<DonationCatalogScreen> {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                      fontSize: 11,
+                      fontSize: 12.5,
                       fontWeight: FontWeight.w800,
                       color: Color(0xFF1F1A28),
                       height: 1.2,
                     ),
                   ),
                   const SizedBox(height: 6),
+                  Text(
+                    item['amount'] as String,
+                    style: const TextStyle(
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF5B33A7),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(4),
                     child: LinearProgressIndicator(
@@ -547,27 +772,27 @@ class _DonationCatalogScreenState extends State<DonationCatalogScreen> {
   Widget _buildOtherCampaignCard(Map<String, dynamic> item) {
     return InkWell(
       onTap: _openCampaignDetail,
-      borderRadius: BorderRadius.circular(10),
+      borderRadius: BorderRadius.circular(12),
       child: Container(
-        padding: const EdgeInsets.all(4),
+        padding: const EdgeInsets.all(6),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Left Image
             ClipRRect(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(10),
               child: Image.asset(
                 item['image'] as String,
-                width: 95,
-                height: 68,
+                width: 120,
+                height: 78,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) => Container(
-                  width: 95,
-                  height: 68,
+                  width: 120,
+                  height: 78,
                   color: const Color(0xFFE8E4F0),
                   child: const Icon(Icons.image, color: Colors.grey),
                 ),
@@ -585,7 +810,7 @@ class _DonationCatalogScreenState extends State<DonationCatalogScreen> {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                      fontSize: 13,
+                      fontSize: 12.5,
                       fontWeight: FontWeight.w800,
                       color: Color(0xFF1F1A28),
                       height: 1.25,
@@ -606,7 +831,7 @@ class _DonationCatalogScreenState extends State<DonationCatalogScreen> {
                       const Icon(
                         Icons.verified_rounded,
                         color: Color(0xFF5B33A7),
-                        size: 13,
+                        size: 12,
                       ),
                     ],
                   ),
@@ -614,26 +839,13 @@ class _DonationCatalogScreenState extends State<DonationCatalogScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Terkumpul',
-                            style: TextStyle(
-                              fontSize: 9.5,
-                              color: Color(0xFF867E94),
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          Text(
-                            item['collected'] as String,
-                            style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w800,
-                              color: Color(0xFF5B33A7),
-                            ),
-                          ),
-                        ],
+                      Text(
+                        item['collected'] as String,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w800,
+                          color: Color(0xFF5B33A7),
+                        ),
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
@@ -642,14 +854,13 @@ class _DonationCatalogScreenState extends State<DonationCatalogScreen> {
                             'Sisa Hari',
                             style: TextStyle(
                               fontSize: 9.5,
-                              color: Color(0xFF867E94),
-                              fontWeight: FontWeight.w500,
+                              color: Color(0xFF867E96),
                             ),
                           ),
                           Text(
                             item['daysLeft'] as String,
                             style: const TextStyle(
-                              fontSize: 12,
+                              fontSize: 13,
                               fontWeight: FontWeight.w800,
                               color: Color(0xFF5B33A7),
                             ),

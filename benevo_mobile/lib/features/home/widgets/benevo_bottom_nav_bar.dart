@@ -82,11 +82,11 @@ class _BenevoBottomNavBarState extends State<BenevoBottomNavBar>
               return CustomPaint(
                 size: Size(MediaQuery.of(context).size.width, totalHeight + bottomPadding),
                 painter: _BenevoNavBarPainter(
-                  itemCount: 4,
+                  itemCount: 5,
                   currentPosition: _animPosition.value,
                   barTop: 16.0,
                   domeRise: 16.0,
-                  domeHalfWidth: 42.0,
+                  domeHalfWidth: 38.0,
                   shadowColor: AppColors.primary.withValues(alpha: 0.14),
                 ),
               );
@@ -98,7 +98,7 @@ class _BenevoBottomNavBarState extends State<BenevoBottomNavBar>
             animation: _animPosition,
             builder: (context, _) {
               final screenWidth = MediaQuery.of(context).size.width;
-              final itemWidth = screenWidth / 4;
+              final itemWidth = screenWidth / 5;
               final activeCenterX = (itemWidth * _animPosition.value) + (itemWidth / 2);
 
               return Positioned(
@@ -129,7 +129,8 @@ class _BenevoBottomNavBarState extends State<BenevoBottomNavBar>
                 _buildTabItem(index: 0, icon: const BenevoHomeIcon()),
                 _buildTabItem(index: 1, icon: const BenevoDonationIcon()),
                 _buildTabItem(index: 2, icon: const BenevoHistoryIcon()),
-                _buildTabItem(index: 3, icon: const BenevoProfileIcon()),
+                _buildTabItem(index: 3, icon: const BenevoHeartNavIcon()),
+                _buildTabItem(index: 4, icon: const BenevoProfileIcon()),
               ],
             ),
           ),
@@ -587,7 +588,28 @@ class _HistoryClockPainter extends CustomPainter {
       oldDelegate.color != color;
 }
 
-/// 4. Profile / User circle icon
+/// 4. Heart Nav Icon (Volunteer / Donasi Saya)
+class BenevoHeartNavIcon extends StatelessWidget {
+  final double size;
+  final Color color;
+
+  const BenevoHeartNavIcon({
+    super.key,
+    this.size = 28.0,
+    this.color = AppColors.primary,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Icon(
+      Icons.volunteer_activism_rounded,
+      size: size,
+      color: color,
+    );
+  }
+}
+
+/// 5. Profile / User circle icon
 class BenevoProfileIcon extends StatelessWidget {
   final double size;
   final Color color;
