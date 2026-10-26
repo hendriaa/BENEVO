@@ -93,7 +93,7 @@ class _BenevoBottomNavBarState extends State<BenevoBottomNavBar>
             },
           ),
 
-          // 2. Active Tab Lavender Bubble
+          // 2. Active Tab Purple Circle with Lavender Border
           AnimatedBuilder(
             animation: _animPosition,
             builder: (context, _) {
@@ -103,14 +103,25 @@ class _BenevoBottomNavBarState extends State<BenevoBottomNavBar>
 
               return Positioned(
                 left: activeCenterX - 25.0,
-                top: 4.0,
+                top: 2.0,
                 child: IgnorePointer(
                   child: Container(
                     width: 50.0,
                     height: 50.0,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFE9DCF8),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary,
                       shape: BoxShape.circle,
+                      border: Border.all(
+                        color: const Color(0xFFEADBFA),
+                        width: 3.5,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.primary.withValues(alpha: 0.32),
+                          blurRadius: 10.0,
+                          offset: const Offset(0, 4.0),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -126,11 +137,36 @@ class _BenevoBottomNavBarState extends State<BenevoBottomNavBar>
             height: totalHeight,
             child: Row(
               children: [
-                _buildTabItem(index: 0, icon: const BenevoHomeIcon()),
-                _buildTabItem(index: 1, icon: const BenevoDonationIcon()),
-                _buildTabItem(index: 2, icon: const BenevoHistoryIcon()),
-                _buildTabItem(index: 3, icon: const BenevoHeartNavIcon()),
-                _buildTabItem(index: 4, icon: const BenevoProfileIcon()),
+                _buildTabItem(
+                  index: 0,
+                  icon: BenevoHomeIcon(
+                    color: widget.currentIndex == 0 ? Colors.white : AppColors.primary,
+                  ),
+                ),
+                _buildTabItem(
+                  index: 1,
+                  icon: BenevoDonationIcon(
+                    color: widget.currentIndex == 1 ? Colors.white : AppColors.primary,
+                  ),
+                ),
+                _buildTabItem(
+                  index: 2,
+                  icon: BenevoHistoryIcon(
+                    color: widget.currentIndex == 2 ? Colors.white : AppColors.primary,
+                  ),
+                ),
+                _buildTabItem(
+                  index: 3,
+                  icon: BenevoHeartNavIcon(
+                    color: widget.currentIndex == 3 ? Colors.white : AppColors.primary,
+                  ),
+                ),
+                _buildTabItem(
+                  index: 4,
+                  icon: BenevoProfileIcon(
+                    color: widget.currentIndex == 4 ? Colors.white : AppColors.primary,
+                  ),
+                ),
               ],
             ),
           ),
@@ -565,9 +601,9 @@ class _HistoryClockPainter extends CustomPainter {
     final combined = Path.combine(PathOperation.union, docWithLines, clockPath);
     canvas.drawPath(combined, fillPaint);
 
-    // White Clock hands
+    // Clock hands (contrast with background)
     final handsPaint = Paint()
-      ..color = Colors.white
+      ..color = (color == Colors.white ? AppColors.primary : Colors.white)
       ..style = PaintingStyle.stroke
       ..strokeWidth = w * 0.075
       ..strokeCap = StrokeCap.round;
@@ -588,7 +624,7 @@ class _HistoryClockPainter extends CustomPainter {
       oldDelegate.color != color;
 }
 
-/// 4. Heart Nav Icon (Volunteer / Donasi Saya)
+/// 4. Heart Nav Icon (Galang Dana / Volunteer Activism)
 class BenevoHeartNavIcon extends StatelessWidget {
   final double size;
   final Color color;
@@ -601,12 +637,103 @@ class BenevoHeartNavIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Icon(
-      Icons.volunteer_activism_rounded,
-      size: size,
-      color: color,
+    return CustomPaint(
+      size: Size(size, size),
+      painter: _HeartHandsNavPainter(color: color),
     );
   }
+}
+
+class _HeartHandsNavPainter extends CustomPainter {
+  final Color color;
+
+  _HeartHandsNavPainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final w = size.width;
+    final h = size.height;
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.fill
+      ..isAntiAlias = true;
+
+    // 1. Center Heart
+    final heartPath = Path();
+    final hCx = w * 0.50;
+    final hTop = h * 0.16;
+    final hW = w * 0.52;
+    final hH = h * 0.44;
+
+    heartPath.moveTo(hCx, hTop + hH * 0.30);
+    // Left lobe
+    heartPath.cubicTo(
+      hCx - hW * 0.10, hTop,
+      hCx - hW * 0.52, hTop,
+      hCx - hW * 0.52, hTop + hH * 0.42,
+    );
+    heartPath.cubicTo(
+      hCx - hW * 0.52, hTop + hH * 0.72,
+      hCx - hW * 0.15, hTop + hH * 0.88,
+      hCx, hTop + hH,
+    );
+    // Right lobe
+    heartPath.cubicTo(
+      hCx + hW * 0.15, hTop + hH * 0.88,
+      hCx + hW * 0.52, hTop + hH * 0.72,
+      hCx + hW * 0.52, hTop + hH * 0.42,
+    );
+    heartPath.cubicTo(
+      hCx + hW * 0.52, hTop,
+      hCx + hW * 0.10, hTop,
+      hCx, hTop + hH * 0.30,
+    );
+    heartPath.close();
+
+    // 2. Left Hand cupping the heart
+    final leftHand = Path();
+    leftHand.moveTo(w * 0.10, h * 0.80);
+    leftHand.lineTo(w * 0.22, h * 0.88);
+    leftHand.cubicTo(
+      w * 0.34, h * 0.90,
+      w * 0.44, h * 0.82,
+      w * 0.48, h * 0.74,
+    );
+    leftHand.lineTo(w * 0.42, h * 0.70);
+    leftHand.cubicTo(
+      w * 0.36, h * 0.77,
+      w * 0.26, h * 0.79,
+      w * 0.18, h * 0.75,
+    );
+    leftHand.lineTo(w * 0.10, h * 0.80);
+    leftHand.close();
+
+    // 3. Right Hand cupping the heart (symmetrical)
+    final rightHand = Path();
+    rightHand.moveTo(w * 0.90, h * 0.80);
+    rightHand.lineTo(w * 0.78, h * 0.88);
+    rightHand.cubicTo(
+      w * 0.66, h * 0.90,
+      w * 0.56, h * 0.82,
+      w * 0.52, h * 0.74,
+    );
+    rightHand.lineTo(w * 0.58, h * 0.70);
+    rightHand.cubicTo(
+      w * 0.64, h * 0.77,
+      w * 0.74, h * 0.79,
+      w * 0.82, h * 0.75,
+    );
+    rightHand.lineTo(w * 0.90, h * 0.80);
+    rightHand.close();
+
+    canvas.drawPath(heartPath, paint);
+    canvas.drawPath(leftHand, paint);
+    canvas.drawPath(rightHand, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant _HeartHandsNavPainter oldDelegate) =>
+      oldDelegate.color != color;
 }
 
 /// 5. Profile / User circle icon

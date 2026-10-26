@@ -7,6 +7,7 @@ import '../../donation/screens/campaign_detail_screen.dart';
 import '../../donation/models/campaign_model.dart';
 import '../../donation/screens/donation_catalog_screen.dart';
 import '../../inbox/screens/inbox_screen.dart';
+import '../../fundraiser/screens/fundraiser_screen.dart';
 import 'category_campaigns_screen.dart';
 import 'search_screen.dart';
 
@@ -113,7 +114,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
               });
             },
           ),
-          _buildFavoritesTab(),
+          FundraiserScreen(
+            onBackToHome: () {
+              setState(() {
+                _currentNavIndex = 0;
+              });
+            },
+          ),
           _buildProfileTab(displayName),
         ],
       ),
@@ -922,82 +929,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ],
       );
-  }
-
-
-
-  Widget _buildFavoritesTab() {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Donasi Saya',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w800,
-                color: Color(0xFF321E54),
-                letterSpacing: -0.3,
-              ),
-            ),
-            const SizedBox(height: 4),
-            const Text(
-              'Kampanye dan program kebaikan yang kamu ikuti',
-              style: TextStyle(
-                fontSize: 13,
-                color: Color(0xFF6B5E82),
-              ),
-            ),
-            const SizedBox(height: 40),
-            Expanded(
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 80,
-                      height: 80,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFEDE7F6),
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.volunteer_activism_rounded,
-                        color: AppColors.primary,
-                        size: 40,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    const Text(
-                      'Belum ada donasi tersimpan',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF26183F),
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 32.0),
-                      child: Text(
-                        'Daftar program donasi favoritmu akan muncul di halaman ini',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 12.5,
-                          color: Color(0xFF757185),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 
   Widget _buildProfileTab(String displayName) {
