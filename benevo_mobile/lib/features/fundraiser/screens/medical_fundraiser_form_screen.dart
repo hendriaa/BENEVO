@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/payout_method_dropdown.dart';
 import 'fundraiser_success_screen.dart';
 
 /// Comprehensive 5-Step Medical Fundraiser Application Screen
@@ -80,16 +81,6 @@ class _MedicalFundraiserFormScreenState
   ];
 
   String _selectedPaymentMethod = 'BCA (VA)';
-  final List<String> _paymentMethods = [
-    'QRIS',
-    'GoPay',
-    'ShopeePay',
-    'DANA',
-    'OVO',
-    'BCA (VA)',
-    'Mandiri (VA)',
-    'BNI (VA)',
-  ];
 
   final TextEditingController _accountNumberController = TextEditingController(
     text: '3901 2345 6789 0123',
@@ -807,60 +798,13 @@ class _MedicalFundraiserFormScreenState
         ),
         const SizedBox(height: 10),
 
-        _buildFormFieldLabel('Bank / e-wallet'),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: const Color(0xFFD6C8E6)),
-          ),
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton<String>(
-              value: _selectedPaymentMethod,
-              isExpanded: true,
-              icon: const Icon(Icons.arrow_drop_down_rounded, color: Color(0xFF5B33A7)),
-              items: _paymentMethods.map((method) {
-                return DropdownMenuItem<String>(
-                  value: method,
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 18,
-                        height: 18,
-                        margin: const EdgeInsets.only(right: 8),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF5B33A7).withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        alignment: Alignment.center,
-                        child: const Icon(
-                          Icons.account_balance_wallet_rounded,
-                          size: 12,
-                          color: Color(0xFF5B33A7),
-                        ),
-                      ),
-                      Text(
-                        method,
-                        style: const TextStyle(
-                          fontSize: 12.5,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFF261943),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
-              onChanged: (newVal) {
-                if (newVal != null) {
-                  setState(() {
-                    _selectedPaymentMethod = newVal;
-                  });
-                }
-              },
-            ),
-          ),
+        PayoutMethodDropdown(
+          selectedMethod: _selectedPaymentMethod,
+          onChanged: (newVal) {
+            setState(() {
+              _selectedPaymentMethod = newVal;
+            });
+          },
         ),
 
         const SizedBox(height: 14),
@@ -1194,7 +1138,7 @@ class _MedicalFundraiserFormScreenState
               _buildReviewRow('Diagnosa', 'Tetralogy Of Fallot (TOF)'),
               _buildReviewRow('Dokumen', '2 file valid'),
               _buildReviewRow('Gambar', '5 foto valid'),
-              _buildReviewRow('Pencairan', 'Mandiri / BCA'),
+              _buildReviewRow('Pencairan', _selectedPaymentMethod),
             ],
           ),
         ),

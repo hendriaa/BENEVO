@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/payout_method_dropdown.dart';
 import 'fundraiser_success_screen.dart';
 import 'other_category_select_screen.dart';
 
@@ -575,37 +576,14 @@ class _OtherFundraiserFormScreenState extends State<OtherFundraiserFormScreen> {
         ),
         const SizedBox(height: 12),
 
-        // Payout Method Selector Dropdown
-        GestureDetector(
-          onTap: _showPayoutMethodPicker,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: const Color(0xFFD6CDDC)),
-            ),
-            child: Row(
-              children: [
-                _buildMethodBadge(_selectedPayoutMethod),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    _selectedPayoutMethod,
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF261943),
-                    ),
-                  ),
-                ),
-                const Icon(
-                  Icons.keyboard_arrow_down_rounded,
-                  color: Color(0xFF887D9C),
-                ),
-              ],
-            ),
-          ),
+        // Payout Method Selector Dropdown (matching media_1793034090387_f0a70fb3.png)
+        PayoutMethodDropdown(
+          selectedMethod: _selectedPayoutMethod,
+          onChanged: (newMethod) {
+            setState(() {
+              _selectedPayoutMethod = newMethod;
+            });
+          },
         ),
         const SizedBox(height: 14),
 
@@ -1249,10 +1227,10 @@ class _OtherFundraiserFormScreenState extends State<OtherFundraiserFormScreen> {
           ),
           Row(
             children: [
-              _buildMethodBadge(_selectedPayoutMethod),
-              const SizedBox(width: 6),
+              PayoutMethodLogo(method: _selectedPayoutMethod),
+              const SizedBox(width: 8),
               Text(
-                _selectedPayoutMethod.replaceAll(' (VA)', ''),
+                _selectedPayoutMethod,
                 style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
@@ -1316,140 +1294,6 @@ class _OtherFundraiserFormScreenState extends State<OtherFundraiserFormScreen> {
     );
   }
 
-  Widget _buildMethodBadge(String method) {
-    if (method.contains('Mandiri')) {
-      return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-        decoration: BoxDecoration(
-          color: const Color(0xFF002D62),
-          borderRadius: BorderRadius.circular(4),
-        ),
-        child: const Text(
-          'mandirı',
-          style: TextStyle(
-            fontSize: 9.5,
-            fontWeight: FontWeight.w900,
-            color: Color(0xFFF9B800),
-          ),
-        ),
-      );
-    } else if (method.contains('BCA')) {
-      return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-        decoration: BoxDecoration(
-          color: const Color(0xFF00569B),
-          borderRadius: BorderRadius.circular(4),
-        ),
-        child: const Text(
-          'BCA',
-          style: TextStyle(
-            fontSize: 9.5,
-            fontWeight: FontWeight.w900,
-            color: Colors.white,
-          ),
-        ),
-      );
-    } else if (method.contains('BNI')) {
-      return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-        decoration: BoxDecoration(
-          color: const Color(0xFF005E6A),
-          borderRadius: BorderRadius.circular(4),
-        ),
-        child: const Text(
-          'BNI',
-          style: TextStyle(
-            fontSize: 9.5,
-            fontWeight: FontWeight.w900,
-            color: Color(0xFFF15A24),
-          ),
-        ),
-      );
-    } else if (method.contains('QRIS')) {
-      return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(4),
-          border: Border.all(color: const Color(0xFFC41230), width: 0.8),
-        ),
-        child: const Text(
-          'QRIS',
-          style: TextStyle(
-            fontSize: 9.5,
-            fontWeight: FontWeight.w900,
-            color: Color(0xFFC41230),
-          ),
-        ),
-      );
-    } else if (method.contains('GoPay')) {
-      return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-        decoration: BoxDecoration(
-          color: const Color(0xFF00AED6),
-          borderRadius: BorderRadius.circular(4),
-        ),
-        child: const Text(
-          'gopay',
-          style: TextStyle(
-            fontSize: 9.5,
-            fontWeight: FontWeight.w900,
-            color: Colors.white,
-          ),
-        ),
-      );
-    } else if (method.contains('Shopee')) {
-      return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-        decoration: BoxDecoration(
-          color: const Color(0xFFEE4D2D),
-          borderRadius: BorderRadius.circular(4),
-        ),
-        child: const Text(
-          'ShopeePay',
-          style: TextStyle(
-            fontSize: 9,
-            fontWeight: FontWeight.w900,
-            color: Colors.white,
-          ),
-        ),
-      );
-    } else if (method.contains('DANA')) {
-      return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-        decoration: BoxDecoration(
-          color: const Color(0xFF118EEA),
-          borderRadius: BorderRadius.circular(4),
-        ),
-        child: const Text(
-          'DANA',
-          style: TextStyle(
-            fontSize: 9.5,
-            fontWeight: FontWeight.w900,
-            color: Colors.white,
-          ),
-        ),
-      );
-    } else if (method.contains('OVO')) {
-      return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-        decoration: BoxDecoration(
-          color: const Color(0xFF4C2A86),
-          borderRadius: BorderRadius.circular(4),
-        ),
-        child: const Text(
-          'OVO',
-          style: TextStyle(
-            fontSize: 9.5,
-            fontWeight: FontWeight.w900,
-            color: Colors.white,
-          ),
-        ),
-      );
-    }
-    return const Icon(Icons.account_balance_wallet_rounded, size: 16);
-  }
-
   void _showAddExpenseDialog() {
     final titleCtrl = TextEditingController();
     final amountCtrl = TextEditingController();
@@ -1509,72 +1353,6 @@ class _OtherFundraiserFormScreenState extends State<OtherFundraiserFormScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  void _showPayoutMethodPicker() {
-    final methods = [
-      'QRIS',
-      'GoPay',
-      'ShopeePay',
-      'DANA',
-      'OVO',
-      'BCA (VA)',
-      'Mandiri (VA)',
-      'BNI (VA)',
-    ];
-
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (sheetCtx) {
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text(
-                  'Pilih Metode Pencairan',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w800,
-                    color: Color(0xFF261943),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                ...methods.map((method) {
-                  return ListTile(
-                    leading: _buildMethodBadge(method),
-                    title: Text(
-                      method,
-                      style: const TextStyle(
-                        fontSize: 13.5,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF261943),
-                      ),
-                    ),
-                    trailing: _selectedPayoutMethod == method
-                        ? const Icon(
-                            Icons.check_circle_rounded,
-                            color: Color(0xFF5B33A7),
-                          )
-                        : null,
-                    onTap: () {
-                      setState(() {
-                        _selectedPayoutMethod = method;
-                      });
-                      Navigator.of(sheetCtx).pop();
-                    },
-                  );
-                }),
-              ],
-            ),
-          ),
-        );
-      },
     );
   }
 }
