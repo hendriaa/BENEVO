@@ -44,7 +44,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     {'title': 'Lingkungan', 'icon': Icons.park_outlined},
     {'title': 'Kegiatan Sosial', 'icon': Icons.groups_outlined},
     {'title': 'Infrastruktur Umum', 'icon': Icons.apartment_outlined},
-    {'title': 'Karya Kreatif & Usaha', 'icon': Icons.storefront_outlined},
+    {'title': 'Karya Kreatif & Modal Usaha', 'icon': Icons.storefront_outlined},
     {'title': 'Panti Asuhan', 'icon': Icons.family_restroom_rounded},
     {'title': 'Tempat Ibadah', 'icon': Icons.mosque_outlined},
     {'title': 'Menolong Hewan', 'icon': Icons.pets_outlined},
