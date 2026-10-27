@@ -608,13 +608,21 @@
                 emailField.value = 'admin@benevo.org';
                 emailField.placeholder = 'admin@benevo.org';
                 submitLabel.textContent = 'Masuk Sebagai Admin';
+                document.getElementById('loginForm').action = "{{ route('dashboard') }}";
             } else {
                 btnOperator.classList.add('active');
                 btnAdmin.classList.remove('active');
                 emailField.value = 'operator@benevo.org';
                 emailField.placeholder = 'operator@benevo.org';
                 submitLabel.textContent = 'Masuk Sebagai Operator';
+                document.getElementById('loginForm').action = "{{ route('operator.dashboard') }}";
             }
+        }
+
+        // Check URL params for preselected role
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('role') === 'operator') {
+            selectRole('operator');
         }
 
         function togglePassword() {
@@ -638,7 +646,11 @@
 
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            window.location.href = "{{ route('dashboard') }}";
+            if (selectedRole === 'operator') {
+                window.location.href = "{{ route('operator.dashboard') }}";
+            } else {
+                window.location.href = "{{ route('dashboard') }}";
+            }
         });
     </script>
 </body>

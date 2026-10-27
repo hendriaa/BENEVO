@@ -40,3 +40,29 @@ Route::get('/donatur', function () {
 Route::get('/kelola-akun-operator', function () {
     return view('kelola-akun-operator');
 })->name('kelola-akun-operator');
+
+Route::get('/operator/dashboard', function () {
+    return view('operator.dashboard');
+})->name('operator.dashboard');
+
+Route::get('/buat-kampanye', function () {
+    return view('buat-kampanye');
+})->name('buat-kampanye');
+
+Route::get('/operator/buat-kampanye', function () {
+    return redirect()->route('buat-kampanye');
+})->name('operator.buat-kampanye');
+
+Route::get('/catatan-pengeluaran-donasi', function () {
+    return view('catatan-pengeluaran-donasi');
+})->name('catatan-pengeluaran-donasi');
+
+Route::get('/operator/catatan-pengeluaran-donasi', function () {
+    return redirect()->route('catatan-pengeluaran-donasi');
+})->name('operator.catatan-pengeluaran-donasi');
+
+Route::get('/operator/rekapitulasi-dana', function () {
+    return redirect()->route('rekapitulasi-dana');
+})->name('operator.rekapitulasi-dana');
+
+
