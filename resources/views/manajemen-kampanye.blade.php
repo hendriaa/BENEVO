@@ -420,11 +420,45 @@
             gap: 24px;
         }
 
+        .page-title-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
         .page-title {
             font-size: 2.1rem;
             font-weight: 800;
             color: var(--brand-purple-heading);
             letter-spacing: -0.025em;
+        }
+
+        .btn-create-campaign {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 22px;
+            background-color: var(--brand-purple);
+            color: #ffffff;
+            font-size: 0.95rem;
+            font-weight: 700;
+            border-radius: 12px;
+            text-decoration: none;
+            box-shadow: 0 4px 14px rgba(133, 92, 184, 0.35);
+            transition: all 0.2s ease;
+        }
+
+        .btn-create-campaign:hover {
+            background-color: #7247a8;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(133, 92, 184, 0.45);
+        }
+
+        .btn-create-campaign svg {
+            width: 18px;
+            height: 18px;
         }
 
         /* ========== STAT CARDS ROW ========== */
@@ -1028,6 +1062,19 @@
                     Donatur
                 </a>
             </li>
+            <li>
+                <a href="{{ route('catatan-pengeluaran-donasi') }}" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                        <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+                        <path d="M12 11h4"/>
+                        <path d="M12 16h4"/>
+                        <path d="M8 11h.01"/>
+                        <path d="M8 16h.01"/>
+                    </svg>
+                    Catatan Pengeluaran Donasi
+                </a>
+            </li>
         </ul>
     </nav>
 
@@ -1107,7 +1154,16 @@
 
     <!-- Content -->
     <main class="content-area">
-        <h1 class="page-title">Manajemen Kampanye</h1>
+        <div class="page-title-row">
+            <h1 class="page-title">Manajemen Kampanye</h1>
+            <a href="{{ route('buat-kampanye') }}" class="btn-create-campaign">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span>Buat Kampanye</span>
+            </a>
+        </div>
 
         <!-- Stat Cards -->
         <div class="stat-cards-row">
