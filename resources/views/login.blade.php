@@ -508,9 +508,14 @@
                 (admin &amp; operator)
             </p>
 
-            <form action="{{ route('dashboard') }}" method="GET" id="loginForm">
+            <form action="{{ route('login.process') }}" method="POST" id="loginForm">
+    @csrf
+    <input type="hidden" name="role" id="roleField" value="admin">
                 <div class="role-section-label">Pilih Jenis Akses</div>
-                
+                @if ($errors->any())
+    <p style="color:#c0392b; font-size:0.85rem; margin-top:10px;">{{ $errors->first() }}</p>
+@endif
+
                 <div class="role-segment" role="tablist" aria-label="Pilih jenis akses">
                     <button type="button" class="role-btn active" id="btnAdmin" onclick="selectRole('admin')">
                         <!-- Admin person icon -->
@@ -541,7 +546,7 @@
                                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88C7.55 15.8 9.68 15 12 15s4.45.8 6.14 2.12C16.43 19.18 14.03 20 12 20z"/>
                             </svg>
                         </span>
-                        <input type="text" id="emailField" class="input-element" value="admin@benevo.org" placeholder="admin@benevo.org" autocomplete="username">
+                        <input type="text" id="emailField" name="email" class="input-element" value="admin@benevo.org" placeholder="admin@benevo.org" autocomplete="username">
                     </div>
                 </div>
 
@@ -556,7 +561,7 @@
                                 <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                             </svg>
                         </span>
-                        <input type="password" id="passwordField" class="input-element" placeholder="masukan kata sandi" autocomplete="current-password">
+                        <input type="password" id="passwordField" name="password" class="input-element" placeholder="masukan kata sandi" autocomplete="current-password">
                         <button type="button" class="password-toggle-btn" id="togglePasswordBtn" onclick="togglePassword()" aria-label="Tampilkan atau sembunyikan kata sandi">
                             <!-- Eye Icon -->
                             <svg id="eyeSvg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -597,6 +602,7 @@
 
         function selectRole(role) {
             selectedRole = role;
+            document.getElementById('roleField').value = role;
             const btnAdmin = document.getElementById('btnAdmin');
             const btnOperator = document.getElementById('btnOperator');
             const emailField = document.getElementById('emailField');
@@ -608,14 +614,14 @@
                 emailField.value = 'admin@benevo.org';
                 emailField.placeholder = 'admin@benevo.org';
                 submitLabel.textContent = 'Masuk Sebagai Admin';
-                document.getElementById('loginForm').action = "{{ route('dashboard') }}";
+
             } else {
                 btnOperator.classList.add('active');
                 btnAdmin.classList.remove('active');
                 emailField.value = 'operator@benevo.org';
                 emailField.placeholder = 'operator@benevo.org';
                 submitLabel.textContent = 'Masuk Sebagai Operator';
-                document.getElementById('loginForm').action = "{{ route('operator.dashboard') }}";
+
             }
         }
 
@@ -644,14 +650,7 @@
             }
         }
 
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            if (selectedRole === 'operator') {
-                window.location.href = "{{ route('operator.dashboard') }}";
-            } else {
-                window.location.href = "{{ route('dashboard') }}";
-            }
-        });
+
     </script>
 </body>
 </html>
