@@ -765,17 +765,18 @@
             backdrop-filter: blur(2px);
             -webkit-backdrop-filter: blur(2px);
             z-index: 99999;
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
             opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.25s ease, visibility 0.25s ease;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
         }
 
         .logout-modal-backdrop.show {
-            opacity: 1;
-            visibility: visible;
+            display: flex !important;
+            opacity: 1 !important;
+            pointer-events: auto !important;
         }
 
         .logout-modal-card {

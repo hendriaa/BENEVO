@@ -995,6 +995,8 @@
         .sidebar-footer {
             margin-top: auto;
             padding-top: 24px;
+            position: relative;
+            z-index: 10;
         }
 
         .logout-btn {
@@ -1010,6 +1012,8 @@
             font-family: inherit;
             transition: all 0.2s ease;
             text-align: left;
+            position: relative;
+            z-index: 11;
         }
 
         .logout-btn:hover {
@@ -1047,17 +1051,18 @@
             backdrop-filter: blur(2px);
             -webkit-backdrop-filter: blur(2px);
             z-index: 99999;
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
             opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.25s ease, visibility 0.25s ease;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
         }
 
         .logout-modal-backdrop.show {
-            opacity: 1;
-            visibility: visible;
+            display: flex !important;
+            opacity: 1 !important;
+            pointer-events: auto !important;
         }
 
         .logout-modal-card {
@@ -1331,7 +1336,7 @@
                 <button class="help-action-btn" type="button" aria-label="Bantuan">?</button>
 
                 <!-- Profile -->
-                <div class="profile-pill">
+                <div class="profile-pill" onclick="openLogoutModal()" title="Klik untuk keluar" role="button" tabindex="0">
                     <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80" alt="Avatar Harry Vaughan" class="profile-avatar">
                     <div class="profile-info">
                         <span class="profile-name">Harry Vaughan</span>
@@ -1590,88 +1595,96 @@
     <!-- Chart.js Configuration -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const ctx = document.getElementById('donationChart').getContext('2d');
+            try {
+                const chartCanvas = document.getElementById('donationChart');
+                if (!chartCanvas || typeof Chart === 'undefined') return;
 
-            // Create smooth purple area gradient
-            const gradient = ctx.createLinearGradient(0, 0, 0, 240);
-            gradient.addColorStop(0, 'rgba(142, 98, 198, 0.75)');
-            gradient.addColorStop(0.6, 'rgba(142, 98, 198, 0.50)');
-            gradient.addColorStop(1, 'rgba(142, 98, 198, 0.15)');
+                const ctx = chartCanvas.getContext('2d');
+                if (!ctx) return;
 
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['1 Oct', '2 Oct', '3 Oct', '4 Oct', '5 Oct', '6 Oct', '7 Oct', '8 Oct', '9 Oct', '10 Oct'],
-                    datasets: [{
-                        label: 'Donasi Harian',
-                        data: [23, 6, 26, 17, 21, 29, 25, 24, 34, 15],
-                        borderColor: '#855cb8',
-                        borderWidth: 2.2,
-                        backgroundColor: gradient,
-                        fill: true,
-                        tension: 0.35,
-                        pointBackgroundColor: '#855cb8',
-                        pointBorderColor: '#ffffff',
-                        pointBorderWidth: 1.5,
-                        pointRadius: 4,
-                        pointHoverRadius: 6,
-                        pointHoverBackgroundColor: '#6736a4',
-                        pointHoverBorderColor: '#ffffff',
-                        pointHoverBorderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    animation: {
-                        duration: 2000,
-                        easing: 'easeInOutQuart'
+                // Create smooth purple area gradient
+                const gradient = ctx.createLinearGradient(0, 0, 0, 240);
+                gradient.addColorStop(0, 'rgba(142, 98, 198, 0.75)');
+                gradient.addColorStop(0.6, 'rgba(142, 98, 198, 0.50)');
+                gradient.addColorStop(1, 'rgba(142, 98, 198, 0.15)');
+
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['1 Oct', '2 Oct', '3 Oct', '4 Oct', '5 Oct', '6 Oct', '7 Oct', '8 Oct', '9 Oct', '10 Oct'],
+                        datasets: [{
+                            label: 'Donasi Harian',
+                            data: [23, 6, 26, 17, 21, 29, 25, 24, 34, 15],
+                            borderColor: '#855cb8',
+                            borderWidth: 2.2,
+                            backgroundColor: gradient,
+                            fill: true,
+                            tension: 0.35,
+                            pointBackgroundColor: '#855cb8',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 1.5,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                            pointHoverBackgroundColor: '#6736a4',
+                            pointHoverBorderColor: '#ffffff',
+                            pointHoverBorderWidth: 2
+                        }]
                     },
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            backgroundColor: '#2b144b',
-                            titleFont: { family: 'Plus Jakarta Sans', size: 12, weight: '700' },
-                            bodyFont: { family: 'Plus Jakarta Sans', size: 13, weight: '600' },
-                            padding: 10,
-                            cornerRadius: 8,
-                            callbacks: {
-                                label: function(context) {
-                                    return ' Donasi: Rp ' + (context.raw * 100000).toLocaleString('id-ID');
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            grid: {
-                                color: 'rgba(230, 220, 245, 0.6)',
-                                drawBorder: false
-                            },
-                            ticks: {
-                                color: '#686b76',
-                                font: {
-                                    family: 'Plus Jakarta Sans',
-                                    size: 11,
-                                    weight: '600'
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        animation: {
+                            duration: 2000,
+                            easing: 'easeInOutQuart'
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                backgroundColor: '#2b144b',
+                                titleFont: { family: 'Plus Jakarta Sans', size: 12, weight: '700' },
+                                bodyFont: { family: 'Plus Jakarta Sans', size: 13, weight: '600' },
+                                padding: 10,
+                                cornerRadius: 8,
+                                callbacks: {
+                                    label: function(context) {
+                                        return ' Donasi: Rp ' + (context.raw * 100000).toLocaleString('id-ID');
+                                    }
                                 }
                             }
                         },
-                        y: {
-                            display: true,
-                            grid: {
-                                color: 'rgba(230, 220, 245, 0.6)',
-                                drawBorder: false
+                        scales: {
+                            x: {
+                                grid: {
+                                    color: 'rgba(230, 220, 245, 0.6)',
+                                    drawBorder: false
+                                },
+                                ticks: {
+                                    color: '#686b76',
+                                    font: {
+                                        family: 'Plus Jakarta Sans',
+                                        size: 11,
+                                        weight: '600'
+                                    }
+                                }
                             },
-                            ticks: {
-                                display: false
-                            },
-                            min: 0,
-                            max: 38
+                            y: {
+                                display: true,
+                                grid: {
+                                    color: 'rgba(230, 220, 245, 0.6)',
+                                    drawBorder: false
+                                },
+                                ticks: {
+                                    display: false
+                                },
+                                min: 0,
+                                max: 38
+                            }
                         }
                     }
-                }
-            });
+                });
+            } catch (err) {
+                console.warn('Chart render warning:', err);
+            }
         });
     </script>
 
@@ -1687,10 +1700,10 @@
 
             <div class="logout-modal-actions">
                 <button type="button" class="logout-btn-cancel" onclick="closeLogoutModal()">Batal</button>
-                <form action="{{ route('logout') }}" method="POST" style="display:contents;">
-    @csrf
-    <button type="submit" class="logout-btn-confirm">Keluar</button>
-</form>
+                <form action="{{ route('logout') }}" method="POST" style="margin:0; padding:0; width:100%; height:100%;">
+                    @csrf
+                    <button type="submit" class="logout-btn-confirm" style="width:100%; height:100%;">Keluar</button>
+                </form>
             </div>
         </div>
     </div>
@@ -1712,7 +1725,17 @@
             }
         }
 
+        window.openLogoutModal = openLogoutModal;
+        window.closeLogoutModal = closeLogoutModal;
+
+        // Listener klik tombol Log out di sidebar
         document.addEventListener('click', function(e) {
+            const btn = e.target.closest('.logout-btn');
+            if (btn) {
+                e.preventDefault();
+                openLogoutModal();
+            }
+
             const modal = document.getElementById('logoutModal');
             if (e.target === modal) {
                 closeLogoutModal();

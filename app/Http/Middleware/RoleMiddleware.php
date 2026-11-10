@@ -10,7 +10,23 @@ class RoleMiddleware
 {
     public function handle(Request $request, Closure $next, string $role): Response
     {
-        if (!$request->user() || $request->user()->role !== $role) {
+        $user = $request->user();
+
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        if ($user->role !== $role) {
+            // Jika admin membuka rute operator, arahkan ke dashboard admin
+            if ($user->role === 'admin') {
+                return redirect()->route('dashboard');
+            }
+
+            // Jika operator membuka rute admin, arahkan ke dashboard operator
+            if ($user->role === 'operator') {
+                return redirect()->route('operator.dashboard');
+            }
+
             abort(403, 'Anda tidak punya akses ke halaman ini.');
         }
 

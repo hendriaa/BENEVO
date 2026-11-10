@@ -520,7 +520,7 @@
         }
 
         .donor-table thead {
-            background-color: #f6f2fc;
+            background-color: #dcd0f2;
         }
 
         .donor-table thead th {
@@ -593,6 +593,63 @@
         .status-badge.aktif {
             background-color: var(--brand-success-bg);
             color: var(--brand-success-text);
+        }
+
+        .status-badge.aktif-purple {
+            background-color: #f1e4fc;
+            color: #8b52cf;
+        }
+
+        .celengan-section-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 26px;
+            margin-bottom: 4px;
+        }
+
+        .coin-rp-badge {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #fae472;
+            color: #ab860d;
+            font-size: 0.92rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 2px 6px rgba(220, 180, 20, 0.2);
+        }
+
+        .celengan-title {
+            font-size: 1.55rem;
+            font-weight: 800;
+            color: var(--brand-purple-heading);
+            letter-spacing: -0.02em;
+        }
+
+        .badge-diperbarui {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 6px;
+            background-color: #dbf8e1;
+            color: #1e873b;
+            font-size: 0.76rem;
+            font-weight: 700;
+        }
+
+        .donor-table.celengan thead th {
+            background-color: #dcd0f2;
+            color: #3b2c56;
+            font-weight: 800;
+        }
+
+        .refund-masuk-val {
+            color: #c79c16;
+            font-weight: 700;
         }
 
         .status-badge.aktif-red {
@@ -742,17 +799,18 @@
             backdrop-filter: blur(2px);
             -webkit-backdrop-filter: blur(2px);
             z-index: 99999;
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
             opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.25s ease, visibility 0.25s ease;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
         }
 
         .logout-modal-backdrop.show {
-            opacity: 1;
-            visibility: visible;
+            display: flex !important;
+            opacity: 1 !important;
+            pointer-events: auto !important;
         }
 
         .logout-modal-card {
@@ -1136,11 +1194,102 @@
                             <td><div class="donor-count">5</div></td>
                             <td><div class="nominal-val">Rp 120.000</div></td>
                             <td>
-                                <span class="status-badge aktif-red">
+                                <span class="status-badge aktif-purple">
                                     <svg viewBox="0 0 24 24" width="8" height="8"><circle cx="12" cy="12" r="10"/></svg>
                                     Aktif
                                 </span>
                             </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="table-footer">
+                    <div class="table-info">Menampilkan 7 dari 203 Lainnya</div>
+                    <div class="pagination">
+                        <button class="page-btn" type="button">
+                            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+                        </button>
+                        <button class="page-btn active" type="button">1</button>
+                        <button class="page-btn" type="button">
+                            <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- CELENGAN DONATUR SECTION -->
+            <div class="celengan-section-title-wrap">
+                <div class="coin-rp-badge">Rp</div>
+                <h2 class="celengan-title">Celengan Donatur</h2>
+                <span class="badge-diperbarui">Diperbarui</span>
+            </div>
+
+            <div class="donor-table-card">
+                <table class="donor-table celengan">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Donatur</th>
+                            <th>Saldo Celengan</th>
+                            <th>Total digunakan</th>
+                            <th>Refund Masuk</th>
+                            <th>Pembaruan Terakhir</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="donor-id">D01</span></td>
+                            <td><span class="donor-name">Anonymous</span></td>
+                            <td><span class="nominal-val">Rp 150.000</span></td>
+                            <td><span class="nominal-val">Rp 50.000</span></td>
+                            <td><span class="refund-masuk-val">Rp 100.000</span></td>
+                            <td><span class="donor-date">3 Nov 2026</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="donor-id">D02</span></td>
+                            <td><span class="donor-name">hn.drii_</span></td>
+                            <td><span class="nominal-val">Rp 45.000</span></td>
+                            <td><span class="nominal-val">Rp 80.000</span></td>
+                            <td><span class="refund-masuk-val">Rp 30.000</span></td>
+                            <td><span class="donor-date">3 Nov 2026</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="donor-id">D03</span></td>
+                            <td><span class="donor-name">ra.syaa_</span></td>
+                            <td><span class="nominal-val">Rp 25.000</span></td>
+                            <td><span class="nominal-val">Rp 10.000</span></td>
+                            <td><span class="refund-masuk-val">Rp 60.000</span></td>
+                            <td><span class="donor-date">3 Nov 2026</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="donor-id">D04</span></td>
+                            <td><span class="donor-name">au.liaa_</span></td>
+                            <td><span class="nominal-val">Rp 75.000</span></td>
+                            <td><span class="nominal-val">Rp 10.000</span></td>
+                            <td><span class="refund-masuk-val">Rp 20.000</span></td>
+                            <td><span class="donor-date">3 Nov 2026</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="donor-id">D05</span></td>
+                            <td><span class="donor-name">fha.rell_</span></td>
+                            <td><span class="nominal-val">Rp 55.000</span></td>
+                            <td><span class="nominal-val">Rp 38.000</span></td>
+                            <td><span class="refund-masuk-val">Rp 67.000</span></td>
+                            <td><span class="donor-date">3 Nov 2026</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="donor-id">D06</span></td>
+                            <td><span class="donor-name">zul.fann_</span></td>
+                            <td><span class="nominal-val">Rp 76.000</span></td>
+                            <td><span class="nominal-val">Rp 19.000</span></td>
+                            <td><span class="refund-masuk-val">Rp 82.000</span></td>
+                            <td><span class="donor-date">3 Nov 2026</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="donor-id">D07</span></td>
+                            <td><span class="donor-name">Anonymous</span></td>
+                            <td><span class="nominal-val">Rp 102.000</span></td>
+                            <td><span class="nominal-val">Rp 50.000</span></td>
+                            <td><span class="refund-masuk-val">Rp 300.000</span></td>
+                            <td><span class="donor-date">3 Nov 2026</span></td>
                         </tr>
                     </tbody>
                 </table>

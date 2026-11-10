@@ -268,7 +268,8 @@
         .status-filter { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 10px; border: 1px solid var(--input-border); background: var(--input-bg); font-size: 0.85rem; font-weight: 600; color: var(--brand-text-dark); margin-bottom: 24px; cursor: pointer; outline: none; }
         .table-container { background: var(--bg-card); border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px rgba(133, 92, 184, 0.1); }
         .data-table { width: 100%; border-collapse: collapse; }
-        .data-table th { background-color: var(--table-header-bg); color: #ffffff; font-size: 0.85rem; font-weight: 700; text-align: left; padding: 14px 16px; text-transform: uppercase; letter-spacing: 0.03em; }
+        .data-table th { background-color: #dcd0f2; color: #352650; font-size: 0.88rem; font-weight: 800; text-align: left; padding: 14px 16px; letter-spacing: -0.01em; }
+        .refund-card-notif-dot { position: absolute; top: -6px; right: -6px; width: 14px; height: 14px; background-color: #e24b42; border-radius: 50%; border: 2.5px solid #ffffff; }
         .data-table td { padding: 14px 16px; border-bottom: 1px solid #f0e8fc; font-size: 0.88rem; color: var(--brand-text-dark); }
         .data-table tr:last-child td { border-bottom: none; }
         .data-table tr:hover td { background-color: #fcf8ff; }
@@ -349,17 +350,18 @@
             backdrop-filter: blur(2px);
             -webkit-backdrop-filter: blur(2px);
             z-index: 99999;
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
             opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.25s ease, visibility 0.25s ease;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
         }
 
         .logout-modal-backdrop.show {
-            opacity: 1;
-            visibility: visible;
+            display: flex !important;
+            opacity: 1 !important;
+            pointer-events: auto !important;
         }
 
         .logout-modal-card {
@@ -618,19 +620,18 @@
                 <div class="stat-grid">
                     <div class="stat-card">
                         <div class="stat-card-label">Total Operator</div>
-                        <div class="stat-card-value">98</div>
+                        <div class="stat-card-value">95</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-card-label">Ditangguhkan / Pasif</div>
-                        <div class="stat-card-value">3</div>
+                        <div class="stat-card-label">Ditangguhkan</div>
+                        <div class="stat-card-value">1</div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-card-label">Permohonan Lisensi</div>
+                    <a href="{{ route('operator-refund') }}" class="stat-card" style="position: relative; text-decoration: none; color: inherit; cursor: pointer;">
+                        <span class="refund-card-notif-dot"></span>
+                        <div class="stat-card-label">Refund</div>
                         <div class="stat-card-value">5</div>
-                    </div>
+                    </a>
                 </div>
-
-                <button class="status-filter">Status</button>
 
                 <div class="table-container">
                     <table class="data-table">
@@ -699,7 +700,7 @@
                             </tr>
                             <tr>
                                 <td><span class="operator-id">OP025</span></td>
-                                <td><span class="operator-name">Yira Saki</span></td>
+                                <td><a href="{{ route('tangguhkan-operator') }}" style="text-decoration: none;"><span class="operator-name">Yira Saki</span></a></td>
                                 <td>16 Sep 2025</td>
                                 <td>
                                     <div class="session-badge offline">
@@ -707,8 +708,8 @@
                                         30 hari lalu
                                     </div>
                                 </td>
-                                <td>1</td>
-                                <td><span class="status-badge ditangguhkan">Ditangguhkan</span></td>
+                                <td><a href="{{ route('operator-refund') }}" style="color: #ea4335; font-weight: 700; text-decoration: none;">Refund</a></td>
+                                <td><a href="{{ route('tangguhkan-operator') }}" class="status-badge ditangguhkan" style="text-decoration: none;">Ditangguhkan</a></td>
                             </tr>
                         </tbody>
                     </table>

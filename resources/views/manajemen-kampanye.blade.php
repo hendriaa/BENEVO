@@ -876,17 +876,18 @@
             backdrop-filter: blur(2px);
             -webkit-backdrop-filter: blur(2px);
             z-index: 99999;
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
             opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.25s ease, visibility 0.25s ease;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
         }
 
         .logout-modal-backdrop.show {
-            opacity: 1;
-            visibility: visible;
+            display: flex !important;
+            opacity: 1 !important;
+            pointer-events: auto !important;
         }
 
         .logout-modal-card {
@@ -1062,19 +1063,6 @@
                     Donatur
                 </a>
             </li>
-            <li>
-                <a href="{{ route('catatan-pengeluaran-donasi') }}" class="nav-link">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
-                        <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
-                        <path d="M12 11h4"/>
-                        <path d="M12 16h4"/>
-                        <path d="M8 11h.01"/>
-                        <path d="M8 16h.01"/>
-                    </svg>
-                    Catatan Pengeluaran Donasi
-                </a>
-            </li>
         </ul>
     </nav>
 
@@ -1156,13 +1144,6 @@
     <main class="content-area">
         <div class="page-title-row">
             <h1 class="page-title">Manajemen Kampanye</h1>
-            <a href="{{ route('buat-kampanye') }}" class="btn-create-campaign">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                </svg>
-                <span>Buat Kampanye</span>
-            </a>
         </div>
 
         <!-- Stat Cards -->
@@ -1187,15 +1168,15 @@
                 </div>
             </div>
 
-            <div class="stat-card">
+            <a href="{{ route('kampanye-ditinjau') }}" class="stat-card stat-card-purple" style="text-decoration: none;">
                 <div class="stat-card-content">
-                    <div class="stat-card-label">Mencapai Target</div>
-                    <div class="stat-card-value">1</div>
+                    <div class="stat-card-label" style="color: #4b366a;">Ditinjau</div>
+                    <div class="stat-card-value" style="color: #211b2d;">1</div>
                 </div>
-                <div class="stat-card-arrow">
+                <div class="stat-card-arrow" style="border-color: #bfaee0; color: #5a388f;">
                     <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                 </div>
-            </div>
+            </a>
 
             <a href="{{ route('pengajuan-kampanye') }}" class="stat-card stat-card-purple" style="text-decoration: none;">
                 <div class="stat-card-content">
