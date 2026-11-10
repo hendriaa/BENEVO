@@ -26,11 +26,14 @@ Route::middleware('auth')->group(function () {
     // ===== Halaman khusus OPERATOR =====
     Route::middleware('role:operator')->group(function () {
         Route::get('/operator/dashboard', fn () => view('operator.dashboard'))->name('operator.dashboard');
-        Route::get('/buat-kampanye', fn () => view('buat-kampanye'))->name('buat-kampanye');
-        Route::get('/catatan-pengeluaran-donasi', fn () => view('catatan-pengeluaran-donasi'))->name('catatan-pengeluaran-donasi');
-
         Route::get('/operator/buat-kampanye', fn () => redirect()->route('buat-kampanye'))->name('operator.buat-kampanye');
         Route::get('/operator/catatan-pengeluaran-donasi', fn () => redirect()->route('catatan-pengeluaran-donasi'))->name('operator.catatan-pengeluaran-donasi');
         Route::get('/operator/rekapitulasi-dana', fn () => view('rekapitulasi-dana'))->name('operator.rekapitulasi-dana');
+    });
+
+    // ===== Halaman yang boleh dibuka admin DAN operator =====
+    Route::middleware('role:admin,operator')->group(function () {
+        Route::get('/buat-kampanye', fn () => view('buat-kampanye'))->name('buat-kampanye');
+        Route::get('/catatan-pengeluaran-donasi', fn () => view('catatan-pengeluaran-donasi'))->name('catatan-pengeluaran-donasi');
     });
 });
