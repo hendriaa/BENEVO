@@ -292,7 +292,7 @@
         .page-btn.active { background: #e9e2f5; border-color: var(--brand-purple); color: var(--brand-purple-heading); }
         .page-btn svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2; }
         @media (max-width: 768px) { .sidebar { display: none; } .topbar { padding: 16px 20px; } .page-content { padding: 20px; } .stat-grid { grid-template-columns: 1fr; } }
-    
+
         /* ========== LOGOUT SIDEBAR BUTTON & MODAL POPUP ========== */
         .sidebar-footer {
             margin-top: auto;
@@ -467,7 +467,7 @@
             transform: translateY(-1px);
             box-shadow: 0 8px 22px rgba(255, 64, 64, 0.45);
         }
-    
+
         .sidebar::-webkit-scrollbar {
             width: 4px;
         }
@@ -545,7 +545,7 @@
                     </li>
                 </ul>
             </div>
-        
+
         <!-- Sidebar Bottom: Logout Button -->
         <div class="sidebar-footer">
             <button type="button" class="logout-btn" onclick="openLogoutModal()" aria-label="Log out">
@@ -737,12 +737,12 @@
                 <img src="{{ asset('images/benevo-logo.png') }}" alt="Benevo Logo" class="logout-modal-logo-img">
                 <span class="logout-modal-logo-text">Benevo</span>
             </div>
-            
+
             <h2 class="logout-modal-title" id="logoutModalTitle">Apakah anda yakin untuk Keluar?</h2>
-            
+
             <div class="logout-modal-actions">
                 <button type="button" class="logout-btn-cancel" onclick="closeLogoutModal()">Batal</button>
-                <a href="{{ route('login') }}" class="logout-btn-confirm">Keluar</a>
+                <form action="{{ route('logout') }}" method="POST" style="display:contents;">@csrf<button type="submit" class="logout-btn-confirm">Keluar</button></form>
             </div>
         </div>
     </div>
