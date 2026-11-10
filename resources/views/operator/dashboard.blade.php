@@ -1212,12 +1212,12 @@
                 <img src="{{ asset('images/benevo-logo.png') }}" alt="Benevo Logo" class="logout-modal-logo-img">
                 <span class="logout-modal-logo-text">Benevo</span>
             </div>
-            
+
             <h2 class="logout-modal-title" id="logoutModalTitle">Apakah anda yakin untuk Keluar?</h2>
-            
+
             <div class="logout-modal-actions">
                 <button type="button" class="logout-btn-cancel" onclick="closeLogoutModal()">Batal</button>
-                <a href="{{ route('login') }}" class="logout-btn-confirm">Keluar</a>
+                <form action="{{ route('logout') }}" method="POST" style="display:contents;">@csrf<button type="submit" class="logout-btn-confirm">Keluar</button></form>
             </div>
         </div>
     </div>
@@ -1228,7 +1228,7 @@
             const ctx = document.getElementById('campaignActivityChart').getContext('2d');
 
             const labels = ['Sen, 12 Okt', 'Sel, 13 Okt', 'Wed, 14 Okt', 'Thu, 15 Okt', 'Fri, 16 Okt', 'Sat, 17 Okt', 'Sun, 17 Okt'];
-            
+
             // Tersalurkan: Purple bar
             const tersalurkanData = [35, 68, 48, 44, 53, 55, 52];
             // Terkumpul: Yellow bar

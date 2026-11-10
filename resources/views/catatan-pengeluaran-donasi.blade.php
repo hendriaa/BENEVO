@@ -1129,12 +1129,12 @@
                 <img src="{{ asset('images/benevo-logo.png') }}" alt="Benevo Logo" class="logout-modal-logo-img">
                 <span class="logout-modal-logo-text">Benevo</span>
             </div>
-            
+
             <h2 class="logout-modal-title" id="logoutModalTitle">Apakah anda yakin untuk Keluar?</h2>
-            
+
             <div class="logout-modal-actions">
                 <button type="button" class="logout-btn-cancel" onclick="closeLogoutModal()">Batal</button>
-                <a href="{{ route('login') }}" class="logout-btn-confirm">Keluar</a>
+               <form action="{{ route('logout') }}" method="POST" style="display:contents;">@csrf<button type="submit" class="logout-btn-confirm">Keluar</button></form>
             </div>
         </div>
     </div>
