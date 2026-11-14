@@ -58,6 +58,7 @@ class CustomInputField extends StatelessWidget {
               letterSpacing: 0.1,
             ),
           ),
+        const SizedBox(height: 8),
         Container(
           decoration: hasShadow
               ? BoxDecoration(
