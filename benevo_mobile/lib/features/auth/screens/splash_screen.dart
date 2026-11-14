@@ -16,18 +16,15 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
-    with SingleTickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen> {
   Timer? _timer;
   bool _hasNavigated = false;
-  late final AnimationController _animController;
-  late final Animation<double> _fadeAnimation;
 
   @override
   void initState() {
     super.initState();
 
-    // Set immersive status bar color matching purple background & fluid shapes
+    // Set status bar transparan dan ikon putih
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -37,18 +34,7 @@ class _SplashScreenState extends State<SplashScreen>
       ),
     );
 
-    // Animasi fade in lembut untuk logo dan teks
-    _animController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 800),
-    );
-    _fadeAnimation = CurvedAnimation(
-      parent: _animController,
-      curve: Curves.easeOutCubic,
-    );
-    _animController.forward();
-
-    // Timer splash screen dibuat lebih lama (default 4000ms = 4 detik)
+    // Timer splash screen selama 4 detik langsung ke halaman utama/register
     _timer = Timer(widget.duration, () {
       _navigateToNext();
     });
@@ -76,7 +62,6 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void dispose() {
     _timer?.cancel();
-    _animController.dispose();
     super.dispose();
   }
 
@@ -114,70 +99,67 @@ class _SplashScreenState extends State<SplashScreen>
               ),
             ),
 
-            // 3. Logo dan Nama Brand di tengah (Optical center)
+            // 3. Logo dan Nama Brand di tengah (Optical center) - langsung tampil dari frame pertama
             Center(
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 24.0),
-                child: FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // Logo Benevo transparan floating (tanpa kotak border)
-                      const BenevoLogo(
-                        size: 92,
-                        showShadow: false,
-                        transparentBackground: true,
-                      ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // Logo Benevo transparan floating (tanpa kotak border)
+                    const BenevoLogo(
+                      size: 92,
+                      showShadow: false,
+                      transparentBackground: true,
+                    ),
 
-                      const SizedBox(height: 16),
+                    const SizedBox(height: 16),
 
-                      // Teks "Benevo •" dengan gradasi warna dan titik kuning persis mockup
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ShaderMask(
-                            blendMode: BlendMode.srcIn,
-                            shaderCallback: (bounds) => const LinearGradient(
-                              begin: Alignment.centerLeft,
-                              end: Alignment.centerRight,
-                              colors: [
-                                Color(0xFF53358D),
-                                Color(0xFF7B4BB8),
-                                Color(0xFFAE7FB5),
-                                Color(0xFFCEB189),
-                                Color(0xFFE5D570),
-                              ],
-                              stops: [0.0, 0.32, 0.58, 0.82, 1.0],
-                            ).createShader(bounds),
-                            child: const Text(
-                              'Benevo',
-                              style: TextStyle(
-                                fontSize: 28,
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: -0.2,
-                                color: Colors.white,
-                              ),
+                    // Teks "Benevo •" dengan gradasi warna dan titik kuning persis mockup
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ShaderMask(
+                          blendMode: BlendMode.srcIn,
+                          shaderCallback: (bounds) => const LinearGradient(
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                            colors: [
+                              Color(0xFF53358D),
+                              Color(0xFF7B4BB8),
+                              Color(0xFFAE7FB5),
+                              Color(0xFFCEB189),
+                              Color(0xFFE5D570),
+                            ],
+                            stops: [0.0, 0.32, 0.58, 0.82, 1.0],
+                          ).createShader(bounds),
+                          child: const Text(
+                            'Benevo',
+                            style: TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: -0.2,
+                              color: Colors.white,
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 3.5, top: 4.0),
-                            child: Container(
-                              width: 7.2,
-                              height: 7.2,
-                              decoration: const BoxDecoration(
-                                color: Color(0xFFE5D570),
-                                shape: BoxShape.circle,
-                              ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 3.5, top: 4.0),
+                          child: Container(
+                            width: 7.2,
+                            height: 7.2,
+                            decoration: const BoxDecoration(
+                              color: Color(0xFFE5D570),
+                              shape: BoxShape.circle,
                             ),
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),
