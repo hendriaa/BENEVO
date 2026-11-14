@@ -5,16 +5,34 @@ class BenevoLogo extends StatelessWidget {
   final double size;
   final double? borderRadius;
   final bool showShadow;
+  final bool transparentBackground;
 
   const BenevoLogo({
     super.key,
     this.size = 100,
     this.borderRadius,
     this.showShadow = true,
+    this.transparentBackground = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    if (transparentBackground) {
+      return Image.asset(
+        'assets/images/splash_logo_symbol.png',
+        width: size,
+        height: size,
+        fit: BoxFit.contain,
+        errorBuilder: (context, error, stackTrace) {
+          return Icon(
+            Icons.favorite_rounded,
+            color: const Color(0xFFF6E784),
+            size: size * 0.6,
+          );
+        },
+      );
+    }
+
     final effectiveRadius = borderRadius ?? (size * 0.22);
 
     return Container(

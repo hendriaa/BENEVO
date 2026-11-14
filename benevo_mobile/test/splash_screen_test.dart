@@ -19,8 +19,8 @@ void main() {
     expect(find.byType(BenevoLogo), findsOneWidget);
     expect(find.text('Benevo'), findsOneWidget);
 
-    // Complete loading duration
-    await tester.pump(const Duration(milliseconds: 2600));
+    // Complete loading duration (4 seconds)
+    await tester.pump(const Duration(milliseconds: 4100));
     await tester.pumpAndSettle();
 
     // Verify transition to RegisterScreen
