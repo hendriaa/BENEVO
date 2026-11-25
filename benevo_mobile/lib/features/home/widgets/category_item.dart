@@ -31,12 +31,20 @@ class CategoryItem extends StatelessWidget {
               width: 50,
               height: 50,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: title == 'Bantuan Pendidikan'
+                    ? const Color(0xFF8B6CB8)
+                    : Colors.white,
                 borderRadius: BorderRadius.circular(14),
+                border: Border.all(
+                  color: title == 'Bantuan Pendidikan'
+                      ? const Color(0xFF7E5EA8)
+                      : const Color(0xFFEADBFA).withValues(alpha: 0.7),
+                  width: 1.0,
+                ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
-                    blurRadius: 6,
+                    color: const Color(0xFF5B33A7).withValues(alpha: 0.08),
+                    blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
                 ],
@@ -121,16 +129,10 @@ class CategoryItem extends StatelessWidget {
           ],
         );
       case 'Bantuan Pendidikan':
-        return const Stack(
-          alignment: Alignment.center,
-          children: [
-            Icon(Icons.school_rounded, color: purple, size: 25),
-            Positioned(
-              bottom: 4,
-              right: 5,
-              child: Icon(Icons.auto_stories_rounded, color: yellow, size: 12),
-            ),
-          ],
+        return const Icon(
+          Icons.school_rounded,
+          color: Colors.white,
+          size: 26,
         );
       case 'Lingkungan':
         return Stack(

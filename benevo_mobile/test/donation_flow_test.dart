@@ -31,7 +31,7 @@ void main() {
     expect(find.text('Rp100.000'), findsOneWidget);
     expect(find.text('Rp150.000'), findsOneWidget);
     expect(find.text('Rp200.000'), findsOneWidget);
-    expect(find.text('Nominal Donasi Lainnya'), findsOneWidget);
+    expect(find.text('Min. Donasi sebesar Rp1.000'), findsOneWidget);
 
     // Tap Rp100.000 preset
     await tester.tap(find.text('Rp100.000'));
@@ -48,21 +48,31 @@ void main() {
     expect(find.text('Pilih Metode Pembayaran'), findsOneWidget);
     expect(find.text('100.000'), findsOneWidget);
 
-    // Verify ONLY QRIS and E-Wallets exist (NO SeaBank, NO Bank Transfer)
+    // Verify QRIS, E-Wallets, and Virtual Accounts exist
     expect(find.byWidgetPredicate((w) => w is PaymentMethodTile && w.item.title == 'QRIS'), findsOneWidget);
     expect(find.byWidgetPredicate((w) => w is PaymentMethodTile && w.item.title == 'GoPay'), findsOneWidget);
     expect(find.byWidgetPredicate((w) => w is PaymentMethodTile && w.item.title == 'ShopeePay'), findsOneWidget);
     expect(find.byWidgetPredicate((w) => w is PaymentMethodTile && w.item.title == 'DANA'), findsOneWidget);
     expect(find.byWidgetPredicate((w) => w is PaymentMethodTile && w.item.title == 'OVO'), findsOneWidget);
-    expect(find.text('SeaBank'), findsNothing);
-    expect(find.text('Bank BCA'), findsNothing);
-    expect(find.text('Bank Mandiri'), findsNothing);
+    expect(find.byWidgetPredicate((w) => w is PaymentMethodTile && w.item.title == 'BCA (Virtual Account)'), findsOneWidget);
+    expect(find.byWidgetPredicate((w) => w is PaymentMethodTile && w.item.title == 'Mandiri (Virtual Account)'), findsOneWidget);
+    expect(find.byWidgetPredicate((w) => w is PaymentMethodTile && w.item.title == 'BNI (Virtual Account)'), findsOneWidget);
 
-    // Test Anonymous Donation Switch
-    final anonSwitch = find.byType(Switch);
-    expect(anonSwitch, findsOneWidget);
-    await tester.tap(anonSwitch);
+    // Test Anonymous Donation Switch (first switch)
+    final switches = find.byType(Switch);
+    expect(switches, findsNWidgets(2));
+    await tester.tap(switches.first);
     await tester.pumpAndSettle();
+
+    // Test Celengan Bonus Switch (second switch: Screen 2 vs Screen 3)
+    expect(find.text('Rp100.000'), findsWidgets); // Total is 100.000 before bonus
+    await tester.tap(switches.last); // Turn on Celengan bonus (-Rp 25.000)
+    await tester.pumpAndSettle();
+    expect(find.text('Rp75.000'), findsOneWidget); // Total becomes 75.000
+
+    await tester.tap(switches.last); // Turn off bonus for remaining flow
+    await tester.pumpAndSettle();
+    expect(find.text('Rp100.000'), findsWidgets);
 
     // 7. Select E-Wallet (GoPay)
     await tester.tap(find.byWidgetPredicate((w) => w is PaymentMethodTile && w.item.title == 'GoPay'));

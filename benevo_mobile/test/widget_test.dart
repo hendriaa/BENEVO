@@ -8,7 +8,7 @@ void main() {
     await tester.pumpWidget(const BenevoApp());
 
     // 0. Wait for Splash Screen loading to complete and transition to Register Screen
-    await tester.pump(const Duration(milliseconds: 2600));
+    await tester.pump(const Duration(milliseconds: 4500));
     await tester.pumpAndSettle();
 
     // 1. App starts on Register screen
@@ -36,12 +36,13 @@ void main() {
     await tester.pump(const Duration(milliseconds: 1200));
     await tester.pumpAndSettle();
 
-    // 5. Verify Original Home Dashboard Screen elements
+    // 5. Verify Home Dashboard Screen elements
     expect(find.text('Halo, Hanzel'), findsOneWidget);
     expect(find.text('RP 5.600.000'), findsOneWidget);
-    expect(find.text('14 campaign'), findsOneWidget);
-    expect(find.text('100%'), findsOneWidget);
-    expect(find.text('cari yang ingin kamu bantu'), findsWidgets);
+    expect(find.text('26 kampanye'), findsOneWidget);
+    expect(find.text('Terbantu'), findsOneWidget);
+    expect(find.text('cari kampanye...'), findsOneWidget);
+    expect(find.text('25.000'), findsOneWidget);
 
     // 6. Switch to Donation Tab (Tab 1 - Hand icon next to home)
     final donationNavIcon = find.byType(BenevoDonationIcon);

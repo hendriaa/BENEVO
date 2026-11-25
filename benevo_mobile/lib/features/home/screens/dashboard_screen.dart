@@ -8,6 +8,9 @@ import '../../donation/models/campaign_model.dart';
 import '../../donation/screens/donation_catalog_screen.dart';
 import '../../inbox/screens/inbox_screen.dart';
 import '../../fundraiser/screens/fundraiser_screen.dart';
+import '../../auth/widgets/incognito_icon.dart';
+import '../../auth/screens/login_screen.dart';
+import '../../profile/screens/edit_profile_screen.dart';
 import 'category_campaigns_screen.dart';
 import 'search_screen.dart';
 
@@ -30,6 +33,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int _currentNavIndex = 0;
   final TextEditingController _searchController = TextEditingController();
   final ScrollController _categoryScrollController = ScrollController();
+  late String _profileUserName;
+  String _profileHandle = '@hn.zell_';
+
+  @override
+  void initState() {
+    super.initState();
+    _profileUserName = widget.userName;
+  }
 
   final List<String> _filters = [
     'Semua',
@@ -138,20 +149,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget _buildHomeTab(String displayName) {
     return Stack(
       children: [
-        // Background Gradient (purple top fading to background)
+        // Background Gradient (purple top gracefully fading to white background)
         Container(
-          height: 340,
+          height: 380,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                Color(0xFF9A7EC4),
-                Color(0xFFB19ACF),
-                Color(0xFFDED2EE),
-                AppColors.background,
+                Color(0xFF8E6FB7),
+                Color(0xFFA78BCB),
+                Color(0xFFC7B4DF),
+                Color(0xFFEAE2F4),
+                Colors.white,
               ],
-              stops: [0.0, 0.35, 0.75, 1.0],
+              stops: [0.0, 0.28, 0.55, 0.82, 1.0],
             ),
           ),
         ),
@@ -162,329 +174,356 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 10),
+                const SizedBox(height: 8),
 
-                // Top Header: Profile Avatar & Search Bar
+                // Top Header: Profile Avatar, Search Bar & Wallet Balance Pill
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: Row(
                     children: [
                       // Profile Avatar
                       GestureDetector(
-                          onTap: () => _showNotification('Membuka profil $displayName'),
-                          child: Container(
-                            width: 44,
-                            height: 44,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.08),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 3),
-                                ),
-                              ],
+                        onTap: () => _showNotification('Membuka profil $displayName'),
+                        child: Container(
+                          width: 38,
+                          height: 38,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.08),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: const Center(
+                            child: Icon(
+                              Icons.person_outline_rounded,
+                              color: Color(0xFF756F82),
+                              size: 21,
                             ),
-                            child: const Center(
-                              child: Icon(
-                                Icons.person_outline_rounded,
-                                color: AppColors.primary,
-                                size: 24,
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(width: 10),
+
+                      // Search Bar
+                      Expanded(
+                        child: Container(
+                          height: 38,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(22),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.06),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: TextField(
+                            controller: _searchController,
+                            readOnly: true,
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => const SearchScreen(),
+                                ),
+                              );
+                            },
+                            style: const TextStyle(
+                              fontSize: 12.5,
+                              color: AppColors.textPrimary,
+                            ),
+                            decoration: const InputDecoration(
+                              hintText: 'cari kampanye...',
+                              hintStyle: TextStyle(
+                                fontSize: 12,
+                                color: Color(0xFF9E98AA),
+                                fontWeight: FontWeight.w400,
+                              ),
+                              prefixIcon: Icon(
+                                Icons.search_rounded,
+                                color: Color(0xFF8E889C),
+                                size: 20,
+                              ),
+                              border: InputBorder.none,
+                              contentPadding: EdgeInsets.symmetric(
+                                horizontal: 14,
+                                vertical: 10,
                               ),
                             ),
                           ),
                         ),
+                      ),
 
-                        const SizedBox(width: 12),
+                      const SizedBox(width: 10),
 
-                        // Search Bar
-                        Expanded(
-                          child: Container(
-                            height: 44,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(24),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.06),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 3),
-                                ),
-                              ],
+                      // Balance Badge: Rp 25.000
+                      Container(
+                        height: 38,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(22),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.06),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
                             ),
-                            child: TextField(
-                              controller: _searchController,
-                              readOnly: true,
-                              onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (_) => const SearchScreen(),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              width: 24,
+                              height: 24,
+                              decoration: const BoxDecoration(
+                                color: Color(0xFFF9D84D),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Center(
+                                child: Text(
+                                  'Rp',
+                                  style: TextStyle(
+                                    fontSize: 10.5,
+                                    fontWeight: FontWeight.w800,
+                                    color: Colors.white,
                                   ),
-                                );
-                              },
-                              style: const TextStyle(
-                                fontSize: 13,
-                                color: AppColors.textPrimary,
-                              ),
-                              decoration: const InputDecoration(
-                                hintText: 'cari yang ingin kamu bantu',
-                                hintStyle: TextStyle(
-                                  fontSize: 12.5,
-                                  color: Color(0xFF9E99AA),
-                                ),
-                                prefixIcon: Icon(
-                                  Icons.search_rounded,
-                                  color: Color(0xFF867E96),
-                                  size: 21,
-                                ),
-                                border: InputBorder.none,
-                                contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 12,
                                 ),
                               ),
                             ),
-                          ),
+                            const SizedBox(width: 6),
+                            const Text(
+                              '25.000',
+                              style: TextStyle(
+                                fontSize: 12.5,
+                                fontWeight: FontWeight.w700,
+                                color: Color(0xFF5D5769),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 18),
+
+                // Greeting Section & Donation Summary Card
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 14,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFC7B6E4).withValues(alpha: 0.45),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.45),
+                        width: 1.2,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFF53388A).withValues(alpha: 0.06),
+                          blurRadius: 16,
+                          offset: const Offset(0, 4),
                         ),
                       ],
                     ),
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  // Greeting Section & Donation Summary Card
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.88),
-                        borderRadius: BorderRadius.circular(22),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.primary.withValues(alpha: 0.08),
-                            blurRadius: 20,
-                            offset: const Offset(0, 6),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // "Halo, Hanzel"
+                        Text(
+                          'Halo, $displayName',
+                          style: const TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w800,
+                            color: Color(0xFF381F68),
+                            letterSpacing: -0.3,
                           ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // "Halo, Hanzel"
-                          Text(
-                            'Halo, $displayName',
-                            style: const TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.w800,
-                              color: Color(0xFF321E54),
-                              letterSpacing: -0.3,
-                            ),
+                        ),
+                        const SizedBox(height: 3),
+                        const Text(
+                          'Terima Kasih atas kebaikanmu yang terus mengalir',
+                          style: TextStyle(
+                            fontSize: 11.5,
+                            color: Color(0xFF5C4978),
+                            fontWeight: FontWeight.w500,
                           ),
-                          const SizedBox(height: 3),
-                          const Text(
-                            'Terima kasih atas kebaikanmu yang terus mengalir',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Color(0xFF5E5074),
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                          const SizedBox(height: 14),
+                        ),
+                        const SizedBox(height: 12),
 
-                          // Donation Summary Box
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 14,
-                              vertical: 12,
+                        // Donation Summary Row
+                        Row(
+                          children: [
+                            // Bare Heart Icon
+                            const Icon(
+                              Icons.favorite_border_rounded,
+                              color: Color(0xFF4C2F82),
+                              size: 32,
                             ),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFF7F4FB),
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                color: const Color(0xFFE9E2F4),
-                                width: 1.2,
+
+                            const SizedBox(width: 12),
+
+                            // Amount & Label
+                            const Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Total Donasi yang telah anda salurkan',
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w500,
+                                      color: Color(0xFF594575),
+                                    ),
+                                  ),
+                                  SizedBox(height: 2),
+                                  Text(
+                                    'RP 5.600.000',
+                                    style: TextStyle(
+                                      fontSize: 18.5,
+                                      fontWeight: FontWeight.w900,
+                                      color: Color(0xFF351D5C),
+                                      letterSpacing: -0.3,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            child: Row(
+
+                            // Right status: "26 kampanye" + Green Checkmark "Tersalurkan"
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                // Heart Icon Badge
                                 Container(
-                                  width: 44,
-                                  height: 44,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 7,
+                                    vertical: 2.5,
+                                  ),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFFEADBFC),
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: AppColors.primary.withValues(alpha: 0.2),
-                                    ),
+                                    color: const Color(0xFFF7DD56),
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
-                                  child: const Center(
-                                    child: Icon(
-                                      Icons.favorite_border_rounded,
-                                      color: AppColors.primary,
-                                      size: 22,
+                                  child: const Text(
+                                    '26 kampanye',
+                                    style: TextStyle(
+                                      fontSize: 8.5,
+                                      fontWeight: FontWeight.w800,
+                                      color: Color(0xFF45380A),
                                     ),
                                   ),
                                 ),
-
-                                const SizedBox(width: 12),
-
-                                // Amount & Label
-                                const Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Total Donasi yang telah anda salurkan :',
-                                        style: TextStyle(
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.textSecondary,
-                                        ),
-                                      ),
-                                      SizedBox(height: 2),
-                                      Text(
-                                        'RP 5.600.000',
-                                        style: TextStyle(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w800,
-                                          color: Color(0xFF381F63),
-                                          letterSpacing: -0.2,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-
-                                // Right status: "14 campaign" + 100% check badge
+                                const SizedBox(height: 4),
                                 Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 7,
-                                        vertical: 3,
+                                      width: 19,
+                                      height: 19,
+                                      decoration: const BoxDecoration(
+                                        color: Color(0xFF67BB6A),
+                                        shape: BoxShape.circle,
                                       ),
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFFFDE87B),
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: const Text(
-                                        '14 campaign',
-                                        style: TextStyle(
-                                          fontSize: 9.5,
-                                          fontWeight: FontWeight.w800,
-                                          color: Color(0xFF4C3D05),
-                                        ),
+                                      child: const Icon(
+                                        Icons.check,
+                                        color: Colors.white,
+                                        size: 13,
                                       ),
                                     ),
-                                    const SizedBox(height: 4),
-                                    Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Container(
-                                          width: 18,
-                                          height: 18,
-                                          decoration: const BoxDecoration(
-                                            color: Color(0xFF4CAF50),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: const Icon(
-                                            Icons.check,
-                                            color: Colors.white,
-                                            size: 12,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 4),
-                                        const Text(
-                                          '100%',
-                                          style: TextStyle(
-                                            fontSize: 9,
-                                            fontWeight: FontWeight.w700,
-                                            color: Color(0xFF2E7D32),
-                                          ),
-                                        ),
-                                      ],
+                                    const SizedBox(height: 2),
+                                    const Text(
+                                      'Tersalurkan',
+                                      style: TextStyle(
+                                        fontSize: 7.5,
+                                        fontWeight: FontWeight.w700,
+                                        color: Color(0xFF382359),
+                                      ),
                                     ),
                                   ],
                                 ),
                               ],
                             ),
-                          ),
-                        ],
-                      ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
+                ),
 
-                  const SizedBox(height: 18),
+                const SizedBox(height: 16),
 
-                  // Horizontal Filter Tabs ("Semua", "Darurat & Bencana", "Kesehatan")
-                  SizedBox(
-                    height: 38,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      itemCount: _filters.length,
-                      itemBuilder: (context, index) {
-                        final isSelected = _selectedFilterIndex == index;
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 10),
-                          child: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                _selectedFilterIndex = index;
-                              });
-                            },
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 200),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 8,
-                              ),
-                              decoration: BoxDecoration(
+                // Horizontal Filter Tabs ("Semua", "Darurat & Bencana", "Kesehatan")
+                SizedBox(
+                  height: 36,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    itemCount: _filters.length,
+                    itemBuilder: (context, index) {
+                      final isSelected = _selectedFilterIndex == index;
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _selectedFilterIndex = index;
+                            });
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 7,
+                            ),
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? const Color(0xFF503287)
+                                  : const Color(0xFFEDE4F8),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
                                 color: isSelected
-                                    ? AppColors.primary
-                                    : Colors.white,
-                                borderRadius: BorderRadius.circular(20),
-                                border: Border.all(
-                                  color: isSelected
-                                      ? AppColors.primary
-                                      : const Color(0xFFD6CDE5),
-                                  width: 1.2,
-                                ),
-                                boxShadow: [
-                                  if (isSelected)
-                                    BoxShadow(
-                                      color: AppColors.primary
-                                          .withValues(alpha: 0.35),
-                                      blurRadius: 10,
-                                      offset: const Offset(0, 4),
-                                    ),
-                                ],
+                                    ? const Color(0xFF503287)
+                                    : const Color(0xFFD4C7EC),
+                                width: 1.0,
                               ),
-                              child: Center(
-                                child: Text(
-                                  _filters[index],
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: isSelected
-                                        ? FontWeight.w700
-                                        : FontWeight.w600,
-                                    color: isSelected
-                                        ? Colors.white
-                                        : const Color(0xFF5A4D73),
-                                  ),
+                            ),
+                            child: Center(
+                              child: Text(
+                                _filters[index],
+                                style: TextStyle(
+                                  fontSize: 11.5,
+                                  fontWeight: isSelected
+                                      ? FontWeight.w700
+                                      : FontWeight.w600,
+                                  color: isSelected
+                                      ? Colors.white
+                                      : const Color(0xFF4C3E68),
                                 ),
                               ),
                             ),
                           ),
-                        );
-                      },
-                    ),
+                        ),
+                      );
+                    },
                   ),
+                ),
 
                   const SizedBox(height: 18),
 
@@ -514,15 +553,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Main Featured Image with Tag
+                          // Main Featured Image with Tag Badges
                           ClipRRect(
                             borderRadius: const BorderRadius.vertical(
                               top: Radius.circular(22),
                             ),
                             child: Stack(
                               children: [
-                                Image.network(
-                                  'https://images.unsplash.com/photo-1547082299-de196ea013d6?w=800',
+                                Image.asset(
+                                  'assets/images/campaigns/s2_ntt.png',
                                   height: 180,
                                   width: double.infinity,
                                   fit: BoxFit.cover,
@@ -539,6 +578,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     ),
                                   ),
                                 ),
+                                // Bottom-left Tag: "Hingga 03/10/2030"
                                 Positioned(
                                   bottom: 10,
                                   left: 10,
@@ -552,11 +592,34 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: const Text(
-                                      'DARURAT & BENCANA',
+                                      'Hingga 03/10/2030',
                                       style: TextStyle(
-                                        fontSize: 9.5,
+                                        fontSize: 9,
                                         fontWeight: FontWeight.w800,
                                         color: Color(0xFF4A3B05),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                // Bottom-right Tag: "9.610 Donatur"
+                                Positioned(
+                                  bottom: 10,
+                                  right: 10,
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 3,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF1E172C).withValues(alpha: 0.65),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: const Text(
+                                      '9.610 Donatur',
+                                      style: TextStyle(
+                                        fontSize: 9,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.white,
                                       ),
                                     ),
                                   ),
@@ -613,30 +676,32 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     minHeight: 7,
                                     backgroundColor: Color(0xFFEFEAF7),
                                     valueColor: AlwaysStoppedAnimation<Color>(
-                                      AppColors.primary,
+                                      Color(0xFF502E88),
                                     ),
                                   ),
                                 ),
 
                                 const SizedBox(height: 8),
 
-                                // Donation Stats
-                                const Row(
+                                // Donation Stats (Stacked)
+                                const Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Total Donasi: ',
+                                      'Total Donasi:',
                                       style: TextStyle(
                                         fontSize: 11.5,
-                                        color: AppColors.textSecondary,
+                                        color: Color(0xFF756F82),
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
+                                    SizedBox(height: 3),
                                     Text(
                                       'RP 566.000.000 / 1.000.000.000',
                                       style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w700,
-                                        color: Color(0xFF331D56),
+                                        fontSize: 14.5,
+                                        fontWeight: FontWeight.w800,
+                                        color: Color(0xFF321B59),
                                       ),
                                     ),
                                   ],
@@ -819,16 +884,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
                           child: SecondaryCampaignCard(
                             title: 'Bantuan Sekolah terpelosok di Maluku Utara',
-                            category: 'PENDIDIKAN',
-                            imageUrl:
-                                'https://images.unsplash.com/photo-1577896851231-70ef18881754?w=500',
-                            currentAmount: 15000000,
-                            targetAmount: 75000000,
-                            daysLeft: '12 hari lagi',
+                            tag: 'Tercapai',
+                            imageAsset: 'assets/images/campaigns/s5_pendidikan.png',
+                            currentAmount: 131000000,
+                            targetAmount: 134000000,
+                            statusLabel: 'Terkumpul',
+                            rightLabel: 'Sisa Hari',
+                            rightValue: '3',
                             onTap: () {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
@@ -839,9 +906,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                           'Bantuan Sekolah terpelosok di Maluku Utara',
                                       category: 'PENDIDIKAN',
                                       imageUrl:
-                                          'https://images.unsplash.com/photo-1577896851231-70ef18881754?w=500',
-                                      currentAmount: 15000000,
-                                      targetAmount: 75000000,
+                                          'assets/images/campaigns/s5_pendidikan.png',
+                                      currentAmount: 131000000,
+                                      targetAmount: 134000000,
                                       donorsCount: 420,
                                       updatesCount: 3,
                                       disbursementsCount: 1,
@@ -873,12 +940,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           child: SecondaryCampaignCard(
                             title:
                                 'Bantuan Infrastruktur Sekolah Prihatinkan di Papua Barat',
-                            category: 'INFRASTRUKTUR',
-                            imageUrl:
-                                'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=500',
-                            currentAmount: 24500000,
-                            targetAmount: 100000000,
-                            daysLeft: '28 hari lagi',
+                            tag: 'Hingga 20/10/2034',
+                            imageAsset: 'assets/images/campaigns/s2_anak_ntt.png',
+                            currentAmount: 121000000,
+                            targetAmount: 134000000,
+                            statusLabel: 'Tersedia',
                             onTap: () {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
@@ -889,9 +955,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                           'Bantuan Infrastruktur Sekolah Prihatinkan di Papua Barat',
                                       category: 'INFRASTRUKTUR',
                                       imageUrl:
-                                          'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=500',
-                                      currentAmount: 24500000,
-                                      targetAmount: 100000000,
+                                          'assets/images/campaigns/s2_anak_ntt.png',
+                                      currentAmount: 121000000,
+                                      targetAmount: 134000000,
                                       donorsCount: 890,
                                       updatesCount: 5,
                                       disbursementsCount: 2,
@@ -931,94 +997,295 @@ class _DashboardScreenState extends State<DashboardScreen> {
       );
   }
 
-  Widget _buildProfileTab(String displayName) {
-    return SafeArea(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
-        child: Column(
-          children: [
-            const SizedBox(height: 20),
-            Center(
-              child: Container(
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFEADBFC),
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: AppColors.primary.withValues(alpha: 0.3),
-                    width: 2,
+  void _showLogoutDialog() {
+    showDialog(
+      context: context,
+      builder: (ctx) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        backgroundColor: Colors.white,
+        insetPadding: const EdgeInsets.symmetric(horizontal: 40),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Yakin Anda mau Keluar dari\nAplikasi?',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
+                  color: Color(0xFF2C1952),
+                  height: 1.35,
+                ),
+              ),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.pop(ctx),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: AppColors.primary,
+                        side: const BorderSide(color: AppColors.primary, width: 1.5),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                      child: const Text(
+                        'Batal',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-                child: const Icon(
-                  Icons.person_rounded,
-                  color: AppColors.primary,
-                  size: 42,
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              displayName,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w800,
-                color: Color(0xFF321E54),
-              ),
-            ),
-            const SizedBox(height: 4),
-            const Text(
-              'donatur.baik@benevo.id',
-              style: TextStyle(
-                fontSize: 13,
-                color: Color(0xFF7A6E91),
-              ),
-            ),
-            const SizedBox(height: 30),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.primary.withValues(alpha: 0.06),
-                    blurRadius: 12,
-                    offset: const Offset(0, 4),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(ctx);
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (_) => const LoginScreen()),
+                          (route) => false,
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF482D79),
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                      child: const Text(
+                        'Keluar',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
-              child: Material(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                clipBehavior: Clip.antiAlias,
-                child: Column(
-                  children: [
-                    ListTile(
-                      leading: const Icon(Icons.person_outline_rounded, color: AppColors.primary),
-                      title: const Text('Edit Profil', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
-                      trailing: const Icon(Icons.chevron_right_rounded),
-                      onTap: () => _showNotification('Fitur Edit Profil'),
-                    ),
-                    const Divider(height: 1),
-                    ListTile(
-                      leading: const Icon(Icons.notifications_none_rounded, color: AppColors.primary),
-                      title: const Text('Notifikasi', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
-                      trailing: const Icon(Icons.chevron_right_rounded),
-                      onTap: () => _showNotification('Fitur Notifikasi'),
-                    ),
-                    const Divider(height: 1),
-                    ListTile(
-                      leading: const Icon(Icons.security_rounded, color: AppColors.primary),
-                      title: const Text('Keamanan Akun', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
-                      trailing: const Icon(Icons.chevron_right_rounded),
-                      onTap: () => _showNotification('Fitur Keamanan'),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  Widget _buildProfileTab(String displayName) {
+    final isAnonymous = widget.isAnonymous;
+
+    return Column(
+      children: [
+        // Solid Purple Header "Informasi Akun" with back arrow
+        Container(
+          color: AppColors.primary,
+          child: SafeArea(
+            bottom: false,
+            child: SizedBox(
+              height: 56,
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
+                    onPressed: () {
+                      setState(() {
+                        _currentNavIndex = 0; // Return to Home tab
+                      });
+                    },
+                  ),
+                  const Text(
+                    'Informasi Akun',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 17,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: -0.2,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+
+        // Profile details card (White background)
+        Expanded(
+          child: Container(
+            color: Colors.white,
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                children: [
+                  const SizedBox(height: 24),
+
+                  // Avatar
+                  if (isAnonymous)
+                    Container(
+                      width: 96,
+                      height: 96,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFA5A5A5),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Center(
+                        child: IncognitoIcon(
+                          size: 56,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
+                  else
+                    Container(
+                      width: 96,
+                      height: 96,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFD6D6D6),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.person,
+                        color: Color(0xFF757575),
+                        size: 56,
+                      ),
+                    ),
+
+                  const SizedBox(height: 14),
+
+                  // Username / Display Name
+                  Text(
+                    isAnonymous ? 'Anonymous #03' : _profileUserName,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w800,
+                      color: Color(0xFF333333),
+                      letterSpacing: -0.3,
+                    ),
+                  ),
+
+                  // If logged in: Show handle and "Edit Profil" button
+                  if (!isAnonymous) ...[
+                    const SizedBox(height: 3),
+                    Text(
+                      _profileHandle,
+                      style: const TextStyle(
+                        fontSize: 12.5,
+                        color: Color(0xFF8E8E93),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    GestureDetector(
+                      onTap: () async {
+                        final result = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => EditProfileScreen(
+                              currentName: _profileUserName,
+                              currentHandle: _profileHandle,
+                            ),
+                          ),
+                        );
+                        if (result != null && result is Map<String, dynamic>) {
+                          setState(() {
+                            if (result['name'] != null) {
+                              _profileUserName = result['name'];
+                            }
+                            if (result['handle'] != null) {
+                              _profileHandle = result['handle'];
+                            }
+                          });
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF40286E),
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xFF40286E).withValues(alpha: 0.28),
+                              blurRadius: 8,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.edit_outlined,
+                              size: 13.5,
+                              color: Colors.white,
+                            ),
+                            SizedBox(width: 6),
+                            Text(
+                              'Edit Profil',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                                letterSpacing: 0.2,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+
+                  const SizedBox(height: 24),
+
+                  // Thick Divider Separator (8px light grey bar)
+                  Container(
+                    height: 8,
+                    width: double.infinity,
+                    color: const Color(0xFFE8E8EC),
+                  ),
+
+                  // "Log Out" Item
+                  InkWell(
+                    onTap: _showLogoutDialog,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.logout_rounded,
+                            color: AppColors.primary,
+                            size: 22,
+                          ),
+                          const SizedBox(width: 14),
+                          const Text(
+                            'Log Out',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFFD32F2F),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const Divider(height: 1, thickness: 1, color: Color(0xFFF0F0F3)),
+
+                  const SizedBox(height: 90), // Bottom padding for floating nav bar
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

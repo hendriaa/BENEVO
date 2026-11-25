@@ -40,16 +40,14 @@ class CampaignModel {
     id: 'campaign_ntt_01',
     title: 'Bantuan Bencana Gempa NTT: Sandang, Pangan, Papan',
     category: 'DARURAT & BENCANA',
-    imageUrl:
-        'https://images.unsplash.com/photo-1542810634-71277d95dcbb?w=800',
+    imageUrl: 'assets/images/campaigns/feat_ntt_photo.png',
     currentAmount: 566000000,
     targetAmount: 1000000000,
     donorsCount: 9670,
     updatesCount: 12,
     disbursementsCount: 5,
     organizerName: 'Aktivis Indonesia',
-    organizerAvatarUrl:
-        'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200',
+    organizerAvatarUrl: 'assets/images/aktivis_avatar.png',
     isOrganizerVerified: true,
     storyDate: '20 Agustus 2026',
     storyContent:

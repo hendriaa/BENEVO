@@ -104,7 +104,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
                   // Header Title
                   const Text(
-                    'Lupa Password?',
+                    'Lupa Kata Sandi?',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 24,
@@ -116,9 +116,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
                   const SizedBox(height: 32),
 
-                  // Email atau Nomor Handphone Field
+                  // Kolom Email atau Nomor Handphone
                   CustomInputField(
-                    label: 'Email atau Nomor Handphone.',
+                    label: 'Email atau Nomor Handphone',
                     hintText: 'Masukkan Email...',
                     prefixIcon: Icons.mail_outline_rounded,
                     controller: _identifierController,

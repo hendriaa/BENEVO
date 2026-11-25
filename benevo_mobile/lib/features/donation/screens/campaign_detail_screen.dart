@@ -127,23 +127,41 @@ class _CampaignDetailScreenState extends State<CampaignDetailScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // 1. Hero Image
-            Image.network(
-              c.imageUrl,
-              height: 230,
-              width: double.infinity,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => Container(
-                height: 230,
-                color: const Color(0xFFDED2EE),
-                child: const Center(
-                  child: Icon(
-                    Icons.image_outlined,
-                    size: 60,
-                    color: AppColors.primary,
+            c.imageUrl.startsWith('assets/')
+                ? Image.asset(
+                    c.imageUrl,
+                    height: 230,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      height: 230,
+                      color: const Color(0xFFDED2EE),
+                      child: const Center(
+                        child: Icon(
+                          Icons.image_outlined,
+                          size: 60,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ),
+                  )
+                : Image.network(
+                    c.imageUrl,
+                    height: 230,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      height: 230,
+                      color: const Color(0xFFDED2EE),
+                      child: const Center(
+                        child: Icon(
+                          Icons.image_outlined,
+                          size: 60,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ),
 
             // 2. Main Campaign Summary Card
             Container(
@@ -304,23 +322,41 @@ class _CampaignDetailScreenState extends State<CampaignDetailScreen> {
                   Row(
                     children: [
                       ClipOval(
-                        child: Image.network(
-                          c.organizerAvatarUrl,
-                          width: 48,
-                          height: 48,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) =>
-                              Container(
-                            width: 48,
-                            height: 48,
-                            color: const Color(0xFFDED2EE),
-                            child: const Icon(
-                              Icons.person_rounded,
-                              color: AppColors.primary,
-                              size: 26,
-                            ),
-                          ),
-                        ),
+                        child: c.organizerAvatarUrl.startsWith('assets/')
+                            ? Image.asset(
+                                c.organizerAvatarUrl,
+                                width: 48,
+                                height: 48,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Container(
+                                  width: 48,
+                                  height: 48,
+                                  color: const Color(0xFFDED2EE),
+                                  child: const Icon(
+                                    Icons.person_rounded,
+                                    color: AppColors.primary,
+                                    size: 26,
+                                  ),
+                                ),
+                              )
+                            : Image.network(
+                                c.organizerAvatarUrl,
+                                width: 48,
+                                height: 48,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Container(
+                                  width: 48,
+                                  height: 48,
+                                  color: const Color(0xFFDED2EE),
+                                  child: const Icon(
+                                    Icons.person_rounded,
+                                    color: AppColors.primary,
+                                    size: 26,
+                                  ),
+                                ),
+                              ),
                       ),
                       const SizedBox(width: 12),
                       Expanded(

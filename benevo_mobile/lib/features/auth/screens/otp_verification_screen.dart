@@ -157,7 +157,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
 
                 // Header Title
                 const Text(
-                  'Lupa Password?',
+                  'Lupa Kata Sandi?',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 24,

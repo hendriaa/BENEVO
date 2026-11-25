@@ -93,7 +93,7 @@ class _BenevoBottomNavBarState extends State<BenevoBottomNavBar>
             },
           ),
 
-          // 2. Active Tab Purple Circle with Lavender Border
+          // 2. Active Tab Lavender Circle with White Border
           AnimatedBuilder(
             animation: _animPosition,
             builder: (context, _) {
@@ -109,17 +109,17 @@ class _BenevoBottomNavBarState extends State<BenevoBottomNavBar>
                     width: 50.0,
                     height: 50.0,
                     decoration: BoxDecoration(
-                      color: AppColors.primary,
+                      color: const Color(0xFFE2CEF8),
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: const Color(0xFFEADBFA),
-                        width: 3.5,
+                        color: Colors.white,
+                        width: 3.0,
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.primary.withValues(alpha: 0.32),
-                          blurRadius: 10.0,
-                          offset: const Offset(0, 4.0),
+                          color: AppColors.primary.withValues(alpha: 0.18),
+                          blurRadius: 8.0,
+                          offset: const Offset(0, 3.0),
                         ),
                       ],
                     ),
@@ -139,32 +139,32 @@ class _BenevoBottomNavBarState extends State<BenevoBottomNavBar>
               children: [
                 _buildTabItem(
                   index: 0,
-                  icon: BenevoHomeIcon(
-                    color: widget.currentIndex == 0 ? Colors.white : AppColors.primary,
+                  icon: const BenevoHomeIcon(
+                    color: AppColors.primary,
                   ),
                 ),
                 _buildTabItem(
                   index: 1,
-                  icon: BenevoDonationIcon(
-                    color: widget.currentIndex == 1 ? Colors.white : AppColors.primary,
+                  icon: const BenevoDonationIcon(
+                    color: AppColors.primary,
                   ),
                 ),
                 _buildTabItem(
                   index: 2,
-                  icon: BenevoHistoryIcon(
-                    color: widget.currentIndex == 2 ? Colors.white : AppColors.primary,
+                  icon: const BenevoHistoryIcon(
+                    color: AppColors.primary,
                   ),
                 ),
                 _buildTabItem(
                   index: 3,
-                  icon: BenevoHeartNavIcon(
-                    color: widget.currentIndex == 3 ? Colors.white : AppColors.primary,
+                  icon: const BenevoHeartNavIcon(
+                    color: AppColors.primary,
                   ),
                 ),
                 _buildTabItem(
                   index: 4,
-                  icon: BenevoProfileIcon(
-                    color: widget.currentIndex == 4 ? Colors.white : AppColors.primary,
+                  icon: const BenevoProfileIcon(
+                    color: AppColors.primary,
                   ),
                 ),
               ],

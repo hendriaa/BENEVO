@@ -108,7 +108,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
                   // Header Title
                   const Text(
-                    'Reset Password',
+                    'Perbarui Kata Sandi',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 24,
@@ -120,9 +120,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
                   const SizedBox(height: 32),
 
-                  // New Password Field
+                  // Kolom Kata Sandi Baru
                   CustomInputField(
-                    label: 'New Password',
+                    label: 'Kata Sandi Baru',
                     hintText: 'Minimal 8 karakter',
                     obscureText: _obscureNewPassword,
                     controller: _newPasswordController,
@@ -154,9 +154,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
                   const SizedBox(height: 18),
 
-                  // Confirm Password Field
+                  // Kolom Konfirmasi Kata Sandi Baru
                   CustomInputField(
-                    label: 'Confirm Password',
+                    label: 'Konfirmasi Kata Sandi Baru',
                     hintText: 'Minimal 8 karakter',
                     obscureText: _obscureConfirmPassword,
                     controller: _confirmPasswordController,
@@ -188,7 +188,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
                   const SizedBox(height: 28),
 
-                  // "Reset Password" Button
+                  // Tombol "Perbarui Kata Sandi"
                   Container(
                     width: double.infinity,
                     height: 52,
@@ -223,7 +223,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                               ),
                             )
                           : const Text(
-                              'Reset Password',
+                              'Perbarui Kata Sandi',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,

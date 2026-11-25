@@ -184,7 +184,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                           // Input: Email atau Nomor Handphone
                           CustomInputField(
-                            label: 'Email atau Nomor Handphone.',
+                            label: 'Email atau Nomor Handphone',
                             hintText: 'Masukkan Email...',
                             prefixIcon: Icons.mail_outline_rounded,
                             controller: _identifierController,

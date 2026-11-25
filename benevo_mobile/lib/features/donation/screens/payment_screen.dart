@@ -21,6 +21,7 @@ class PaymentScreen extends StatefulWidget {
 class _PaymentScreenState extends State<PaymentScreen> {
   late int _amount;
   bool _isAnonymous = false;
+  bool _useCelenganBonus = false;
   PaymentType _selectedPayment = PaymentType.qris;
   bool _isMethodsExpanded = true;
 
@@ -30,29 +31,43 @@ class _PaymentScreenState extends State<PaymentScreen> {
     _amount = widget.initialAmount;
   }
 
+  String _formatNumber(int val) {
+    return val.toString().replaceAllMapped(
+          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+          (Match m) => '${m[1]}.',
+        );
+  }
+
   String _formatCurrency(int val) {
-    return 'Rp${val.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';
+    return 'Rp${_formatNumber(val)}';
   }
 
   void _processPayment() {
+    final totalAmount = _useCelenganBonus
+        ? (_amount - 25000).clamp(1000, 999999999)
+        : _amount;
+
     final selectedItem = PaymentMethodItem.availableMethods.firstWhere(
       (m) => m.type == _selectedPayment,
     );
 
     if (_selectedPayment == PaymentType.qris) {
-      _showQrisModal(selectedItem);
+      _showQrisModal(selectedItem, totalAmount);
+    } else if (selectedItem.category == 'Virtual Account') {
+      _showVirtualAccountModal(selectedItem, totalAmount);
     } else {
-      _showEwalletModal(selectedItem);
+      _showEwalletModal(selectedItem, totalAmount);
     }
   }
 
-  void _navigateToSuccess(String methodTitle) {
-    final txId = 'BNV-${DateTime.now().millisecondsSinceEpoch.toString().substring(5)}';
+  void _navigateToSuccess(String methodTitle, int finalAmount) {
+    final txId =
+        'BNV-${DateTime.now().millisecondsSinceEpoch.toString().substring(5)}';
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (_) => DonationSuccessScreen(
           campaignTitle: widget.campaignTitle,
-          amount: _amount,
+          amount: finalAmount,
           paymentMethod: methodTitle,
           isAnonymous: _isAnonymous,
           transactionId: txId,
@@ -61,23 +76,23 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
   }
 
-  void _showQrisModal(PaymentMethodItem item) {
+  void _showQrisModal(PaymentMethodItem item, int payAmount) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (ctx) => _QrisPaymentModal(
-        amount: _amount,
+        amount: payAmount,
         campaignTitle: widget.campaignTitle,
         onPaid: () {
           Navigator.of(ctx).pop();
-          _navigateToSuccess('QRIS Instan');
+          _navigateToSuccess('QRIS Instan', payAmount);
         },
       ),
     );
   }
 
-  void _showEwalletModal(PaymentMethodItem item) {
+  void _showEwalletModal(PaymentMethodItem item, int payAmount) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -106,16 +121,16 @@ class _PaymentScreenState extends State<PaymentScreen> {
               style: const TextStyle(
                 fontSize: 17,
                 fontWeight: FontWeight.w800,
-                color: AppColors.primaryDark,
+                color: Color(0xFF503287),
               ),
             ),
             const SizedBox(height: 6),
             Text(
-              'Total yang harus dibayar: ${_formatCurrency(_amount)}',
+              'Total yang harus dibayar: ${_formatCurrency(payAmount)}',
               style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF53388A),
+                color: Color(0xFF503287),
               ),
             ),
             const SizedBox(height: 8),
@@ -134,10 +149,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.of(ctx).pop();
-                  _navigateToSuccess(item.title);
+                  _navigateToSuccess(item.title, payAmount);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
+                  backgroundColor: const Color(0xFF503287),
                   foregroundColor: Colors.white,
                   elevation: 0,
                   shape: RoundedRectangleBorder(
@@ -160,21 +175,140 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
   }
 
+  void _showVirtualAccountModal(PaymentMethodItem item, int payAmount) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        padding: const EdgeInsets.all(22),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 44,
+              height: 4,
+              decoration: BoxDecoration(
+                color: const Color(0xFFDDD6E8),
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            const SizedBox(height: 18),
+            PaymentMethodLogo(type: item.type, width: 64, height: 38),
+            const SizedBox(height: 14),
+            Text(
+              item.title,
+              style: const TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w800,
+                color: Color(0xFF503287),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF5F5F5),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    '8277 0812 3456 7890',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1.0,
+                      color: Color(0xFF333333),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text('Nomor VA berhasil disalin!')),
+                      );
+                    },
+                    child: const Text(
+                      'Salin',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF503287),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'Total Pembayaran: ${_formatCurrency(payAmount)}',
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF503287),
+              ),
+            ),
+            const SizedBox(height: 20),
+            SizedBox(
+              width: double.infinity,
+              height: 48,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                  _navigateToSuccess(item.title, payAmount);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF503287),
+                  foregroundColor: Colors.white,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Text(
+                  'Saya Sudah Bayar',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final totalAmount = _useCelenganBonus
+        ? (_amount - 25000).clamp(1000, 999999999)
+        : _amount;
+
     final qrisMethod = PaymentMethodItem.availableMethods
         .firstWhere((m) => m.type == PaymentType.qris);
     final ewalletMethods = PaymentMethodItem.availableMethods
         .where((m) => m.category == 'E-Wallet')
         .toList();
+    final vaMethods = PaymentMethodItem.availableMethods
+        .where((m) => m.category == 'Virtual Account')
+        .toList();
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFBF9FD),
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: AppColors.primary,
+        backgroundColor: const Color(0xFF503287),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
@@ -189,253 +323,340 @@ class _PaymentScreenState extends State<PaymentScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // 1. Nominal Donasi Section
-            Container(
-              color: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Nominal Donasi',
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.textPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-
-                  // Amount Card Box
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 14,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF3EDFA),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: const Color(0xFFDDD2ED),
-                        width: 1,
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'RP',
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xFF5B457D),
-                          ),
-                        ),
-                        Text(
-                          _amount.toString().replaceAllMapped(
-                                RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                                (Match m) => '${m[1]}.',
-                              ),
-                          style: const TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w800,
-                            color: AppColors.primaryDark,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 14),
-
-                  // Toggle Sembunyikan Nama Saya (Donasi Anonim)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'sembunyikan nama saya (donasi anonim)',
-                        style: TextStyle(
-                          fontSize: 12.5,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xFF4C3E5F),
-                        ),
-                      ),
-                      Switch(
-                        value: _isAnonymous,
-                        onChanged: (val) => setState(() => _isAnonymous = val),
-                        activeThumbColor: Colors.white,
-                        activeTrackColor: AppColors.primary,
-                        inactiveThumbColor: Colors.white,
-                        inactiveTrackColor: const Color(0xFFD6CEDF),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 12),
-
-            // 2. Pilih Metode Pembayaran Section
-            Container(
-              color: Colors.white,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Dropdown Header
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        _isMethodsExpanded = !_isMethodsExpanded;
-                      });
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 14,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Pilih Metode Pembayaran',
-                            style: TextStyle(
-                              fontSize: 13.5,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.textPrimary,
-                            ),
-                          ),
-                          Icon(
-                            _isMethodsExpanded
-                                ? Icons.keyboard_arrow_up_rounded
-                                : Icons.keyboard_arrow_down_rounded,
-                            color: const Color(0xFF53388A),
-                            size: 24,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  if (_isMethodsExpanded) ...[
-                    // Subtitle Banner 1: QRIS
-                    Container(
-                      width: double.infinity,
-                      color: const Color(0xFFEFEBF3),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 8,
-                      ),
-                      child: const Text(
-                        'Pembayaran Instan (verifikasi otomatis, minimal nominal donasi RP1.000)',
-                        style: TextStyle(
-                          fontSize: 10.5,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF6A5C7E),
-                        ),
-                      ),
-                    ),
-
-                    // QRIS Tile
-                    PaymentMethodTile(
-                      item: qrisMethod,
-                      isSelected: _selectedPayment == PaymentType.qris,
-                      onTap: () => setState(() => _selectedPayment = PaymentType.qris),
-                    ),
-
-                    // Subtitle Banner 2: E-Wallet
-                    Container(
-                      width: double.infinity,
-                      color: const Color(0xFFEFEBF3),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 8,
-                      ),
-                      child: const Text(
-                        'E-Wallet (GoPay, ShopeePay, DANA, OVO)',
-                        style: TextStyle(
-                          fontSize: 10.5,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF6A5C7E),
-                        ),
-                      ),
-                    ),
-
-                    // E-Wallet Tiles (QRIS & E-Wallet Only!)
-                    ...ewalletMethods.map((method) {
-                      return PaymentMethodTile(
-                        item: method,
-                        isSelected: _selectedPayment == method.type,
-                        onTap: () => setState(() => _selectedPayment = method.type),
-                      );
-                    }),
-                  ],
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 100), // Spacing for bottom bar
-          ],
-        ),
-      ),
-
-      // 3. Bottom Bar: Total Pembayaran & "Lanjut Pembayaran"
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.08),
-              blurRadius: 16,
-              offset: const Offset(0, -4),
-            ),
-          ],
-        ),
-        child: SafeArea(
-          child: Row(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              // 1. Nominal Donasi Section
+              const Text(
+                'Nominal Donasi',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF333333),
+                ),
+              ),
+              const SizedBox(height: 6),
+
+              // Nominal Box
+              Container(
+                height: 38,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF2F2F2),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      'Total Pembayaran',
+                      'RP',
                       style: TextStyle(
-                        fontSize: 11.5,
-                        color: AppColors.textSecondary,
-                        fontWeight: FontWeight.w500,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF333333),
                       ),
                     ),
-                    const SizedBox(height: 2),
                     Text(
-                      _formatCurrency(_amount),
+                      _formatNumber(_amount),
                       style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w900,
-                        color: AppColors.primary,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF333333),
                       ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(width: 14),
+              const SizedBox(height: 10),
+
+              // Gray divider bar
+              Container(
+                height: 5,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFD6D6D6),
+                  borderRadius: BorderRadius.circular(2.5),
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              // Toggle Sembunyikan Nama Saya (Donasi Anonim)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'sembunyikan nama saya (donasi anonim)',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Color(0xFF4A4A4A),
+                    ),
+                  ),
+                  Transform.scale(
+                    scale: 0.75,
+                    child: Switch(
+                      value: _isAnonymous,
+                      onChanged: (val) => setState(() => _isAnonymous = val),
+                      activeColor: const Color(0xFF503287),
+                      activeTrackColor:
+                          const Color(0xFF503287).withOpacity(0.4),
+                      inactiveThumbColor: Colors.white,
+                      inactiveTrackColor: const Color(0xFFD6D6D6),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+
+              // 2. Pilih Metode Pembayaran Section Box
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: const Color(0xFFE5E5E5),
+                    width: 1,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Dropdown Header
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          _isMethodsExpanded = !_isMethodsExpanded;
+                        });
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 10,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Pilih Metode Pembayaran',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xFF555555),
+                              ),
+                            ),
+                            Icon(
+                              _isMethodsExpanded
+                                  ? Icons.keyboard_arrow_up_rounded
+                                  : Icons.keyboard_arrow_down_rounded,
+                              color: const Color(0xFF503287),
+                              size: 20,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    if (_isMethodsExpanded) ...[
+                      // Category 1: Pembayaran Instan
+                      Container(
+                        width: double.infinity,
+                        color: const Color(0xFFDCDCDC),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 6,
+                        ),
+                        child: const Text(
+                          'Pembayaran Instan (verifikasi otomatis, minimal nominal donasi RP1.000)',
+                          style: TextStyle(
+                            fontSize: 9.5,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF222222),
+                          ),
+                        ),
+                      ),
+                      PaymentMethodTile(
+                        item: qrisMethod,
+                        isSelected: _selectedPayment == PaymentType.qris,
+                        onTap: () => setState(
+                            () => _selectedPayment = PaymentType.qris),
+                      ),
+
+                      // Category 2: Pembayaran E-wallet
+                      Container(
+                        width: double.infinity,
+                        color: const Color(0xFFDCDCDC),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 6,
+                        ),
+                        child: const Text(
+                          'Pembayaran E-wallet (verifikasi otomatis, minimal nominal donasi RP1.000)',
+                          style: TextStyle(
+                            fontSize: 9.5,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF222222),
+                          ),
+                        ),
+                      ),
+                      ...ewalletMethods.map((method) {
+                        return PaymentMethodTile(
+                          item: method,
+                          isSelected: _selectedPayment == method.type,
+                          onTap: () => setState(
+                              () => _selectedPayment = method.type),
+                        );
+                      }),
+
+                      // Category 3: Pembayaran Virtual Account
+                      Container(
+                        width: double.infinity,
+                        color: const Color(0xFFDCDCDC),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 6,
+                        ),
+                        child: const Text(
+                          'Pembayaran Virtual Account (verifikasi otomatis, minimal nominal donasi RP10.000)',
+                          style: TextStyle(
+                            fontSize: 9.5,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF222222),
+                          ),
+                        ),
+                      ),
+                      ...vaMethods.map((method) {
+                        return PaymentMethodTile(
+                          item: method,
+                          isSelected: _selectedPayment == method.type,
+                          onTap: () =>
+                              setState(() => _selectedPayment = method.type),
+                        );
+                      }),
+                    ],
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 14),
+
+              // Bonus Tambahan dari Celengan! Row
+              Row(
+                children: [
+                  const Text(
+                    'Bonus Tambahan dari Celengan!',
+                    style: TextStyle(
+                      fontSize: 11.5,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF222222),
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  Container(
+                    width: 14,
+                    height: 14,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: const Color(0xFFFFD54F),
+                      border: Border.all(
+                          color: const Color(0xFFE5B800), width: 0.8),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        'Rp',
+                        style: TextStyle(
+                          fontSize: 6.5,
+                          fontWeight: FontWeight.w900,
+                          color: Color(0xFFB78103),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  const Text(
+                    '-Rp 25.000',
+                    style: TextStyle(
+                      fontSize: 11.5,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFFD4A017),
+                    ),
+                  ),
+                  const Spacer(),
+                  Transform.scale(
+                    scale: 0.75,
+                    child: Switch(
+                      value: _useCelenganBonus,
+                      activeColor: const Color(0xFF503287),
+                      activeTrackColor:
+                          const Color(0xFF503287).withOpacity(0.4),
+                      inactiveThumbColor: Colors.white,
+                      inactiveTrackColor: const Color(0xFFD6D6D6),
+                      onChanged: (val) {
+                        setState(() {
+                          _useCelenganBonus = val;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 24),
+            ],
+          ),
+        ),
+      ),
+
+      // 3. Bottom Bar: Total Pembayaran & "Lanjut Pembayaran"
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          border: Border(
+            top: BorderSide(
+              color: Color(0xFFEEEEEE),
+              width: 1,
+            ),
+          ),
+        ),
+        child: SafeArea(
+          child: Row(
+            children: [
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Total Pembayaran',
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF333333),
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    'Rp${_formatNumber(totalAmount)}',
+                    style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w800,
+                      color: Color(0xFF503287),
+                    ),
+                  ),
+                ],
+              ),
+              const Spacer(),
               ElevatedButton(
                 onPressed: _processPayment,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
+                  backgroundColor: const Color(0xFF503287),
                   foregroundColor: Colors.white,
                   elevation: 0,
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 13,
+                    horizontal: 22,
+                    vertical: 12,
                   ),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
                 child: const Text(
@@ -443,6 +664,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
+                    color: Colors.white,
                   ),
                 ),
               ),

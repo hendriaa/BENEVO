@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../../../core/constants/colors.dart';
 
 class NominalSelectionBottomSheet extends StatefulWidget {
   final int initialAmount;
@@ -44,22 +43,22 @@ class _NominalSelectionBottomSheetState
     {
       'amount': 50000,
       'label': 'Rp50.000',
-      'icon': null,
+      'asset': 'assets/images/preset_sandang.png',
     },
     {
       'amount': 100000,
       'label': 'Rp100.000',
-      'icon': Icons.inventory_2_outlined, // Paket Sembako
+      'asset': 'assets/images/preset_pangan.png',
     },
     {
       'amount': 150000,
       'label': 'Rp150.000',
-      'icon': Icons.cottage_outlined, // Tempat Tinggal / Tenda
+      'asset': 'assets/images/preset_papan.png',
     },
     {
       'amount': 200000,
       'label': 'Rp200.000',
-      'icon': Icons.airport_shuttle_outlined, // Medis / Ambulans
+      'asset': 'assets/images/preset_medis.png',
     },
   ];
 
@@ -111,90 +110,75 @@ class _NominalSelectionBottomSheetState
     return Container(
       decoration: const BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       padding: EdgeInsets.only(
-        left: 20,
-        right: 20,
-        top: 14,
+        left: 18,
+        right: 18,
+        top: 20,
         bottom: 24 + bottomInset,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Top Notch Handle
-          Center(
-            child: Container(
-              width: 44,
-              height: 4.5,
-              decoration: BoxDecoration(
-                color: const Color(0xFFD1CBD9),
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-          ),
-          const SizedBox(height: 18),
-
           // Presets List
           ..._presets.map((preset) {
             final int amount = preset['amount'] as int;
             final String label = preset['label'] as String;
-            final IconData? icon = preset['icon'] as IconData?;
+            final String asset = preset['asset'] as String;
             final bool isSelected = !_isCustom && _selectedAmount == amount;
 
             return Padding(
               padding: const EdgeInsets.only(bottom: 10),
               child: InkWell(
                 onTap: () => _selectPreset(amount),
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(12),
                 child: Container(
-                  height: 52,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  height: 48,
+                  padding: const EdgeInsets.symmetric(horizontal: 14),
                   decoration: BoxDecoration(
-                    color: isSelected
-                        ? const Color(0xFFF3ECFC)
-                        : Colors.white,
-                    borderRadius: BorderRadius.circular(14),
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
                     border: Border.all(
                       color: isSelected
-                          ? AppColors.primary
-                          : const Color(0xFFE5DFEC),
+                          ? const Color(0xFF503287)
+                          : const Color(0xFFE2DFE9),
                       width: isSelected ? 1.6 : 1.0,
                     ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.04),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
                   ),
                   child: Row(
                     children: [
-                      if (icon != null) ...[
-                        Icon(
-                          icon,
-                          color: isSelected
-                              ? AppColors.primary
-                              : const Color(0xFF7A659B),
-                          size: 22,
-                        ),
-                        const SizedBox(width: 12),
-                      ],
+                      Image.asset(
+                        asset,
+                        width: 24,
+                        height: 24,
+                        fit: BoxFit.contain,
+                      ),
+                      const SizedBox(width: 14),
                       Expanded(
                         child: Text(
                           label,
                           style: TextStyle(
                             fontSize: 15,
-                            fontWeight: isSelected
-                                ? FontWeight.w800
-                                : FontWeight.w600,
+                            fontWeight: FontWeight.w700,
                             color: isSelected
-                                ? AppColors.primaryDark
-                                : AppColors.textPrimary,
+                                ? const Color(0xFF503287)
+                                : const Color(0xFF2A282F),
                           ),
                         ),
                       ),
-                      Icon(
-                        Icons.chevron_right_rounded,
-                        color: isSelected
-                            ? AppColors.primary
-                            : const Color(0xFFA094B3),
-                        size: 22,
+                      const Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        color: Color(0xFF503287),
+                        size: 15,
                       ),
                     ],
                   ),
@@ -203,80 +187,56 @@ class _NominalSelectionBottomSheetState
             );
           }),
 
-          const SizedBox(height: 8),
+          const SizedBox(height: 6),
 
-          // "Nominal Donasi Lainnya"
-          const Text(
-            'Nominal Donasi Lainnya',
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary,
-            ),
-          ),
-          const SizedBox(height: 8),
-
+          // Custom Input Box (Gray container with right-aligned text)
           Container(
-            height: 48,
-            padding: const EdgeInsets.symmetric(horizontal: 14),
+            height: 42,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
             decoration: BoxDecoration(
-              color: const Color(0xFFF7F5FA),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: _isCustom
-                    ? AppColors.primary
-                    : const Color(0xFFDDD6E8),
-                width: _isCustom ? 1.5 : 1.0,
+              color: const Color(0xFFD6D6D6),
+              borderRadius: BorderRadius.circular(6),
+              border: _isCustom
+                  ? Border.all(color: const Color(0xFF503287), width: 1.2)
+                  : null,
+            ),
+            alignment: Alignment.centerRight,
+            child: TextField(
+              controller: _customController,
+              keyboardType: TextInputType.number,
+              textAlign: TextAlign.right,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+              ],
+              onChanged: _onCustomChanged,
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF333333),
+              ),
+              decoration: const InputDecoration(
+                hintText: '0',
+                hintStyle: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF666666),
+                ),
+                border: InputBorder.none,
+                isDense: true,
+                contentPadding: EdgeInsets.zero,
               ),
             ),
-            child: Row(
-              children: [
-                const Text(
-                  'Rp',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF6B5885),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: TextField(
-                    controller: _customController,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
-                    onChanged: _onCustomChanged,
-                    style: const TextStyle(
-                      fontSize: 14.5,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.textPrimary,
-                    ),
-                    decoration: const InputDecoration(
-                      hintText: '0',
-                      hintStyle: TextStyle(
-                        fontSize: 14,
-                        color: Color(0xFFA89EB5),
-                      ),
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.zero,
-                    ),
-                  ),
-                ),
-              ],
-            ),
           ),
-          const SizedBox(height: 5),
+          const SizedBox(height: 4),
           const Text(
             'Min. Donasi sebesar Rp1.000',
             style: TextStyle(
-              fontSize: 11,
-              color: Color(0xFF8B7F9E),
+              fontSize: 10,
+              color: Color(0xFF757575),
             ),
           ),
 
-          const SizedBox(height: 20),
+          const SizedBox(height: 24),
 
           // "Lanjut Pembayaran" Button
           SizedBox(
@@ -287,12 +247,12 @@ class _NominalSelectionBottomSheetState
                   ? () => widget.onProceed(_selectedAmount)
                   : null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
+                backgroundColor: const Color(0xFF503287),
                 disabledBackgroundColor: const Color(0xFFC7BED4),
                 foregroundColor: Colors.white,
                 elevation: 0,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(12),
                 ),
               ),
               child: const Text(
@@ -300,6 +260,7 @@ class _NominalSelectionBottomSheetState
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w700,
+                  color: Colors.white,
                 ),
               ),
             ),

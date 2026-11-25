@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../../core/constants/colors.dart';
 
 enum PaymentType {
   qris,
@@ -7,13 +6,16 @@ enum PaymentType {
   shopeepay,
   dana,
   ovo,
+  bcaVA,
+  mandiriVA,
+  bniVA,
 }
 
 class PaymentMethodItem {
   final PaymentType type;
   final String title;
   final String subtitle;
-  final String category; // 'QRIS' or 'E-Wallet'
+  final String category; // 'Instan', 'E-Wallet', or 'Virtual Account'
 
   const PaymentMethodItem({
     required this.type,
@@ -23,12 +25,12 @@ class PaymentMethodItem {
   });
 
   static const List<PaymentMethodItem> availableMethods = [
-    // 1. QRIS (Instant verification)
+    // 1. Instan
     PaymentMethodItem(
       type: PaymentType.qris,
       title: 'QRIS',
       subtitle: 'Semua e-wallet & mobile banking',
-      category: 'QRIS',
+      category: 'Instan',
     ),
     // 2. E-Wallets
     PaymentMethodItem(
@@ -55,6 +57,25 @@ class PaymentMethodItem {
       subtitle: 'Saldo OVO Cash & Points',
       category: 'E-Wallet',
     ),
+    // 3. Virtual Accounts
+    PaymentMethodItem(
+      type: PaymentType.bcaVA,
+      title: 'BCA (Virtual Account)',
+      subtitle: 'Virtual Account BCA',
+      category: 'Virtual Account',
+    ),
+    PaymentMethodItem(
+      type: PaymentType.mandiriVA,
+      title: 'Mandiri (Virtual Account)',
+      subtitle: 'Virtual Account Mandiri',
+      category: 'Virtual Account',
+    ),
+    PaymentMethodItem(
+      type: PaymentType.bniVA,
+      title: 'BNI (Virtual Account)',
+      subtitle: 'Virtual Account BNI',
+      category: 'Virtual Account',
+    ),
   ];
 }
 
@@ -67,7 +88,7 @@ class PaymentMethodLogo extends StatelessWidget {
     super.key,
     required this.type,
     this.width = 44,
-    this.height = 28,
+    this.height = 24,
   });
 
   @override
@@ -83,6 +104,12 @@ class PaymentMethodLogo extends StatelessWidget {
         return _buildDanaLogo();
       case PaymentType.ovo:
         return _buildOvoLogo();
+      case PaymentType.bcaVA:
+        return _buildBcaLogo();
+      case PaymentType.mandiriVA:
+        return _buildMandiriLogo();
+      case PaymentType.bniVA:
+        return _buildBniLogo();
     }
   }
 
@@ -90,30 +117,37 @@ class PaymentMethodLogo extends StatelessWidget {
     return Container(
       width: width,
       height: height,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: const Color(0xFFE5E7EB), width: 1),
-      ),
-      child: Center(
-        child: RichText(
-          text: const TextSpan(
+      alignment: Alignment.centerLeft,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 14,
+            height: 14,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black87, width: 2),
+              borderRadius: BorderRadius.circular(2),
+            ),
+            child: Center(
+              child: Container(
+                width: 4,
+                height: 4,
+                color: Colors.black87,
+              ),
+            ),
+          ),
+          const SizedBox(width: 3),
+          const Text(
+            'QRIS',
             style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w900,
               fontStyle: FontStyle.italic,
-              letterSpacing: 0.5,
+              letterSpacing: 0.3,
               color: Colors.black87,
             ),
-            children: [
-              TextSpan(text: 'QR'),
-              TextSpan(
-                text: 'IS',
-                style: TextStyle(color: Color(0xFFE11D48)),
-              ),
-            ],
           ),
-        ),
+        ],
       ),
     );
   }
@@ -122,20 +156,29 @@ class PaymentMethodLogo extends StatelessWidget {
     return Container(
       width: width,
       height: height,
-      decoration: BoxDecoration(
-        color: const Color(0xFF00AED6),
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: const Center(
-        child: Text(
-          'gopay',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w900,
-            fontSize: 10,
-            letterSpacing: -0.3,
+      alignment: Alignment.centerLeft,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 12,
+            height: 12,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: const Color(0xFF00AED6), width: 2.5),
+            ),
           ),
-        ),
+          const SizedBox(width: 3),
+          const Text(
+            'gopay',
+            style: TextStyle(
+              color: Color(0xFF00AED6),
+              fontWeight: FontWeight.w900,
+              fontSize: 10,
+              letterSpacing: -0.3,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -144,32 +187,48 @@ class PaymentMethodLogo extends StatelessWidget {
     return Container(
       width: width,
       height: height,
-      decoration: BoxDecoration(
-        color: const Color(0xFFEE4D2D),
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: const Center(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 2),
-          child: FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.shopping_bag_outlined, color: Colors.white, size: 12),
-                SizedBox(width: 2),
-                Text(
-                  'SPay',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 9.5,
-                  ),
-                ),
-              ],
+      alignment: Alignment.centerLeft,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(2),
+            decoration: BoxDecoration(
+              color: const Color(0xFFEE4D2D),
+              borderRadius: BorderRadius.circular(3),
+            ),
+            child: const Icon(
+              Icons.shopping_bag_outlined,
+              color: Colors.white,
+              size: 10,
             ),
           ),
-        ),
+          const SizedBox(width: 3),
+          const Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Shopee',
+                style: TextStyle(
+                  color: Color(0xFFEE4D2D),
+                  fontWeight: FontWeight.w800,
+                  fontSize: 7,
+                  height: 1.0,
+                ),
+              ),
+              Text(
+                'Pay',
+                style: TextStyle(
+                  color: Color(0xFFEE4D2D),
+                  fontWeight: FontWeight.w800,
+                  fontSize: 7,
+                  height: 1.0,
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -178,20 +237,39 @@ class PaymentMethodLogo extends StatelessWidget {
     return Container(
       width: width,
       height: height,
-      decoration: BoxDecoration(
-        color: const Color(0xFF108EE9),
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: const Center(
-        child: Text(
-          'DANA',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w900,
-            fontSize: 10,
-            letterSpacing: 0.5,
+      alignment: Alignment.centerLeft,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 11,
+            height: 11,
+            decoration: const BoxDecoration(
+              color: Color(0xFF108EE9),
+              shape: BoxShape.circle,
+            ),
+            child: const Center(
+              child: Text(
+                'D',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 7,
+                ),
+              ),
+            ),
           ),
-        ),
+          const SizedBox(width: 2.5),
+          const Text(
+            'DANA',
+            style: TextStyle(
+              color: Color(0xFF108EE9),
+              fontWeight: FontWeight.w900,
+              fontSize: 9.5,
+              letterSpacing: 0.3,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -200,20 +278,117 @@ class PaymentMethodLogo extends StatelessWidget {
     return Container(
       width: width,
       height: height,
-      decoration: BoxDecoration(
-        color: const Color(0xFF4C3494),
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: const Center(
-        child: Text(
-          'OVO',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w900,
-            fontSize: 10.5,
-            letterSpacing: 0.8,
-          ),
+      alignment: Alignment.centerLeft,
+      child: const Text(
+        'OVO',
+        style: TextStyle(
+          color: Color(0xFF4C3494),
+          fontWeight: FontWeight.w900,
+          fontSize: 12,
+          letterSpacing: 0.8,
         ),
+      ),
+    );
+  }
+
+  Widget _buildBcaLogo() {
+    return Container(
+      width: width,
+      height: height,
+      alignment: Alignment.centerLeft,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 10,
+            height: 10,
+            decoration: BoxDecoration(
+              color: const Color(0xFF003D79),
+              borderRadius: BorderRadius.circular(2),
+            ),
+            child: const Center(
+              child: Icon(
+                Icons.check,
+                color: Colors.white,
+                size: 7,
+              ),
+            ),
+          ),
+          const SizedBox(width: 3),
+          const Text(
+            'BCA',
+            style: TextStyle(
+              color: Color(0xFF003D79),
+              fontWeight: FontWeight.w900,
+              fontSize: 10.5,
+              letterSpacing: 0.2,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMandiriLogo() {
+    return Container(
+      width: width,
+      height: height,
+      alignment: Alignment.centerLeft,
+      child: const Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            'mandiri',
+            style: TextStyle(
+              color: Color(0xFF003D79),
+              fontWeight: FontWeight.w900,
+              fontSize: 9,
+              letterSpacing: -0.2,
+            ),
+          ),
+          SizedBox(width: 2),
+          Text(
+            '~',
+            style: TextStyle(
+              color: Color(0xFFFFB800),
+              fontWeight: FontWeight.w900,
+              fontSize: 11,
+              height: 0.7,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBniLogo() {
+    return Container(
+      width: width,
+      height: height,
+      alignment: Alignment.centerLeft,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 8,
+            height: 8,
+            decoration: const BoxDecoration(
+              color: Color(0xFFF15A24),
+              shape: BoxShape.circle,
+            ),
+          ),
+          const SizedBox(width: 3),
+          const Text(
+            'BNI',
+            style: TextStyle(
+              color: Color(0xFF005E6A),
+              fontWeight: FontWeight.w900,
+              fontSize: 10,
+              letterSpacing: 0.4,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -236,62 +411,39 @@ class PaymentMethodTile extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? const Color(0xFFF9F5FF)
-              : Colors.white,
+        height: 38,
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+        decoration: const BoxDecoration(
+          color: Colors.white,
           border: Border(
             bottom: BorderSide(
-              color: Colors.grey.withValues(alpha: 0.15),
+              color: Color(0xFFF0F0F0),
               width: 1,
             ),
           ),
         ),
         child: Row(
           children: [
-            PaymentMethodLogo(type: item.type),
+            SizedBox(
+              width: 52,
+              child: PaymentMethodLogo(type: item.type),
+            ),
             const SizedBox(width: 14),
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    item.title,
-                    style: const TextStyle(
-                      fontSize: 13.5,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.textPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: 1),
-                  Text(
-                    item.subtitle,
-                    style: const TextStyle(
-                      fontSize: 11,
-                      color: AppColors.textSecondary,
-                    ),
-                  ),
-                ],
+              child: Text(
+                item.title,
+                style: const TextStyle(
+                  fontSize: 11.5,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF333333),
+                ),
               ),
             ),
             if (isSelected)
               const Icon(
-                Icons.check_circle_rounded,
-                color: Color(0xFF10B981),
-                size: 22,
-              )
-            else
-              Container(
-                width: 20,
-                height: 20,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: const Color(0xFFD1D5DB),
-                    width: 1.5,
-                  ),
-                ),
+                Icons.check,
+                color: Color(0xFF4CAF50),
+                size: 18,
               ),
           ],
         ),
